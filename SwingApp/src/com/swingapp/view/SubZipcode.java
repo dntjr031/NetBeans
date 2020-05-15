@@ -5,19 +5,29 @@
  */
 package com.swingapp.view;
 
+import javax.swing.JFrame;
+
 /**
  *
  * @author STU-03
  */
 public class SubZipcode extends javax.swing.JFrame {
 
+    private MemberFrame memberFrame;
     /**
      * Creates new form SubZipcode
      */
     public SubZipcode() {
         initComponents();
+        init();
+        addEvent();
     }
 
+    public SubZipcode(MemberFrame memberFrame) {
+        this();
+        this.memberFrame = memberFrame;
+        
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -133,4 +143,13 @@ public class SubZipcode extends javax.swing.JFrame {
     private javax.swing.JTable table;
     private javax.swing.JTextField tfDong;
     // End of variables declaration//GEN-END:variables
+
+    private void init() {
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        
+    }
+
+    private void addEvent() {
+        
+    }
 }

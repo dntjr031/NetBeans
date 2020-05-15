@@ -5,19 +5,39 @@
  */
 package com.swingapp.view;
 
+import com.swingapp.member.model.MemberDAO;
+import com.swingapp.member.model.MemberDTO;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.SQLException;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author STU-03
  */
-public class MemberFrame extends javax.swing.JFrame {
+public class MemberFrame extends javax.swing.JFrame implements ActionListener{
 
+    private LoginGUI loginGUI;
+    private String[] emailArr
+            = {"naver.com","nate.com","daum.net","gmail.com","직접입력"};
+    private MemberDAO dao = new MemberDAO();
     /**
      * Creates new form MemberFrame
      */
     public MemberFrame() {
         initComponents();
+        
+        init();
+        addEvent();
     }
 
+    public MemberFrame(LoginGUI loginGUI) {
+        this();
+        this.loginGUI = loginGUI;
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -40,10 +60,10 @@ public class MemberFrame extends javax.swing.JFrame {
         tfName = new javax.swing.JTextField();
         tfPwd = new javax.swing.JTextField();
         tfId = new javax.swing.JTextField();
-        jButton3 = new javax.swing.JButton();
-        tfMain1 = new javax.swing.JTextField();
+        btDup = new javax.swing.JButton();
+        tfmail1 = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
-        tfMain2 = new javax.swing.JTextField();
+        tfmail2 = new javax.swing.JTextField();
         cbMail = new javax.swing.JComboBox<>();
         cbTel = new javax.swing.JComboBox<>();
         tfTel2 = new javax.swing.JTextField();
@@ -76,13 +96,13 @@ public class MemberFrame extends javax.swing.JFrame {
 
         btAdd.setText("회원가입");
 
-        jButton3.setText("중복확인");
+        btDup.setText("중복확인");
 
         jLabel9.setText(" @ ");
 
         cbMail.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        cbTel.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbTel.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "010", "011", "016", "017", "018", "019" }));
 
         btZipcode.setText("우편번호 찾기");
 
@@ -101,13 +121,13 @@ public class MemberFrame extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(tfMain1, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(tfmail1, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel9)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(cbMail, 0, 158, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(tfMain2, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(tfmail2, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(tfPwd, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -137,7 +157,7 @@ public class MemberFrame extends javax.swing.JFrame {
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(tfId, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jButton3))
+                                        .addComponent(btDup))
                                     .addComponent(tfName, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(tfZipcode, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -162,7 +182,7 @@ public class MemberFrame extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tfId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton3))
+                    .addComponent(btDup))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -170,9 +190,9 @@ public class MemberFrame extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tfMain1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tfmail1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel9)
-                    .addComponent(tfMain2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tfmail2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cbMail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -243,10 +263,10 @@ public class MemberFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btAdd;
     private javax.swing.JButton btCancle;
+    private javax.swing.JButton btDup;
     private javax.swing.JButton btZipcode;
     private javax.swing.JComboBox<String> cbMail;
     private javax.swing.JComboBox<String> cbTel;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -258,13 +278,108 @@ public class MemberFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JTextField tfAddress1;
     private javax.swing.JTextField tfAddress2;
-    private javax.swing.JTextField tfId;
-    private javax.swing.JTextField tfMain1;
-    private javax.swing.JTextField tfMain2;
+    public javax.swing.JTextField tfId;
     private javax.swing.JTextField tfName;
     private javax.swing.JTextField tfPwd;
     private javax.swing.JTextField tfTel1;
     private javax.swing.JTextField tfTel2;
     private javax.swing.JTextField tfZipcode;
+    private javax.swing.JTextField tfmail1;
+    private javax.swing.JTextField tfmail2;
     // End of variables declaration//GEN-END:variables
+
+    private void init() {
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        
+        /*cbTel.addItem("010");
+        cbTel.addItem("011");
+        cbTel.addItem("016");
+        */
+        DefaultComboBoxModel model = new DefaultComboBoxModel(emailArr);
+        cbMail.setModel(model);
+    }
+
+    private void addEvent() {
+        btAdd.addActionListener(this);
+        btCancle.addActionListener(this);
+        btZipcode.addActionListener(this);
+        btDup.addActionListener(this);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        
+        if(e.getSource() == btAdd){
+            try {
+                //회원가입
+                register();
+                this.dispose();
+                loginGUI.tfId.setText(tfId.getText());
+                loginGUI.tfPwd.requestFocus();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }else if(e.getSource() == btCancle){
+            clear_tf();
+        }else if(e.getSource() == btDup){
+            //중복확인
+            SubUserId subUserId = new SubUserId(this, tfId.getText());
+            subUserId.setVisible(true);
+        }else if(e.getSource() == btZipcode){
+            //우편번호 찾기
+            SubZipcode sz = new SubZipcode(this);
+            sz.setVisible(true);
+        }
+        
+    }
+
+    private void clear_tf() {
+        
+    }
+
+    private void register() throws SQLException {
+        //1
+        String name = tfName.getText();
+        String id = tfId.getText();
+        String pwd = tfPwd.getText();
+        String email1 = tfmail1.getText();
+        String email2 = (String) cbMail.getSelectedItem();
+        String email3 = tfmail2.getText();
+        String tel1 =  (String) cbTel.getSelectedItem();
+        String tel2 = tfTel1.getText();
+        String tel3 = tfTel2.getText();
+        String zipcode = tfZipcode.getText();
+        String address1 = tfAddress1.getText();
+        String address2 = tfAddress2.getText();
+        
+        String email = "";
+        String tel = "";
+        if(email1 != null && !email1.isEmpty()){
+            if(email2.equals("직접입력")){
+                if(email3 != null){
+                    email = email1 + "@" + email3;
+                }
+            }else{
+                email = email1 + "@"+ email2;
+            }
+        }
+        if(tel2 != null && tel1 != null && !tel2.isEmpty() && !tel1.isEmpty()){
+            tel = cbTel.getSelectedItem() + "-"+ tfTel1.getText() + "-" + tfTel2.getText();
+        }
+        //2
+        MemberDTO dto = new MemberDTO();
+        dto.setAddress1(address1);
+        dto.setAddress2(address2);
+        dto.setEmail(email);
+        dto.setHp(tel);
+        dto.setName(name);
+        dto.setPwd(pwd);
+        dto.setUserid(id);
+        dto.setZipcode(zipcode);
+        
+        int cnt = dao.insertMember(dto);
+        //3
+        String result = cnt>0 ?"회원가입 완료!" : "회원가입 실패!";
+        JOptionPane.showMessageDialog(this, result);
+    }
 }

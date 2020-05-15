@@ -5,6 +5,8 @@
  */
 package com.swingapp.main;
 
+import com.swingapp.test.Test1;
+import com.swingapp.view.LoginGUI;
 import com.swingapp.view.ProductMain;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -41,8 +43,10 @@ public class MyLauncher extends JApplet {
                     UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
                 } catch (Exception e) {
                 }
-                
-                ProductMain f = new ProductMain();
+
+                //ProductMain f = new ProductMain();
+                LoginGUI f = new LoginGUI();
+                //Test1 f = new Test1();
                 f.show();
             }
         });

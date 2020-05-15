@@ -5,17 +5,36 @@
  */
 package com.swingapp.view;
 
+import com.swingapp.member.model.MemberDAO;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author STU-03
  */
-public class SubUserId extends javax.swing.JFrame {
+public class SubUserId extends javax.swing.JFrame implements ActionListener{
 
+    private MemberFrame memberFrame;
+    private MemberDAO dao = new MemberDAO();
     /**
      * Creates new form SubUserId
      */
     public SubUserId() {
         initComponents();
+        init();
+        addEvent();
+    }
+    
+    public SubUserId(MemberFrame memberFrame, String userId) {
+        this();
+        this.memberFrame = memberFrame;
+        tfId.setText(userId);
     }
 
     /**
@@ -98,4 +117,53 @@ public class SubUserId extends javax.swing.JFrame {
     private javax.swing.JButton btDup;
     private javax.swing.JTextField tfId;
     // End of variables declaration//GEN-END:variables
+
+    private void init() {
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    }
+
+    private void addEvent() {
+        btDup.addActionListener(this);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if(e.getSource() == btDup){
+            try {
+                useridDup();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    private void useridDup() throws SQLException {
+        //1
+        String userid = tfId.getText();
+        
+        if(userid ==null || userid.isEmpty()){
+            JOptionPane.showMessageDialog(this, "아이디를 입력하세요");
+            tfId.requestFocus();
+            return;
+        }
+        
+        //2
+        int result = dao.duplicateId(userid);
+        
+        //3
+        if(result == MemberDAO.USABLE){
+            int opt = JOptionPane.showConfirmDialog(this, userid+
+                    "는 사용가능한 아이디입니다. 사용하시겠습니까?",
+                    "아이디 중복확인", JOptionPane.YES_NO_OPTION);
+            if(opt == JOptionPane.YES_OPTION){
+                this.dispose();
+                memberFrame.tfId.setText(userid);
+            }
+        }else if(result == MemberDAO.UNUSABLE){
+            JOptionPane.showMessageDialog(this, userid +
+                    "는 이미 등록된 아이디입니다. 다른 아이디를 입력하세요!");
+        }else{
+            JOptionPane.showMessageDialog(this, "아이디 중복확인 실패");
+        }
+    }
 }

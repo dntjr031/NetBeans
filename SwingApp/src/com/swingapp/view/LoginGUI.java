@@ -5,17 +5,27 @@
  */
 package com.swingapp.view;
 
+import com.swingapp.member.model.MemberDAO;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author STU-03
  */
-public class LoginGUI extends javax.swing.JFrame {
+public class LoginGUI extends javax.swing.JFrame implements ActionListener{
 
+    private MemberDAO dao = new MemberDAO();
     /**
      * Creates new form LoginGUI
      */
     public LoginGUI() {
         initComponents();
+        
+        init();
+        addEvent();
     }
 
     /**
@@ -34,7 +44,7 @@ public class LoginGUI extends javax.swing.JFrame {
         btLogin = new javax.swing.JButton();
         btAdd = new javax.swing.JButton();
         tfId = new javax.swing.JTextField();
-        tfPwd = new javax.swing.JTextField();
+        tfPwd = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("제품관리");
@@ -67,8 +77,8 @@ public class LoginGUI extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(tfId)
-                    .addComponent(tfPwd)
-                    .addComponent(btAdd, javax.swing.GroupLayout.DEFAULT_SIZE, 114, Short.MAX_VALUE))
+                    .addComponent(btAdd, javax.swing.GroupLayout.DEFAULT_SIZE, 114, Short.MAX_VALUE)
+                    .addComponent(tfPwd))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -100,7 +110,7 @@ public class LoginGUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(127, 127, 127)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -157,7 +167,71 @@ public class LoginGUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JTextField tfId;
-    private javax.swing.JTextField tfPwd;
+    public javax.swing.JTextField tfId;
+    public javax.swing.JPasswordField tfPwd;
     // End of variables declaration//GEN-END:variables
+
+    private void init() {
+        
+    }
+
+    private void addEvent() {
+        btAdd.addActionListener(this);
+        btLogin.addActionListener(this);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if(e.getSource() == btAdd){
+            //회원가입
+            MemberFrame f = new MemberFrame(this);
+            f.setVisible(true);
+        }else if(e.getSource() == btLogin){
+            try {
+                //로그인처리
+                login();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    private void login() throws SQLException {
+        //1
+        String id = tfId.getText();
+        String pwd = tfPwd.getText();
+        
+        if(id == null || id.isEmpty()){
+            JOptionPane.showMessageDialog(this, "아이디를 입력해야 합니다.");
+            tfId.requestFocus();
+            return;
+        }
+        if(pwd == null || pwd.isEmpty()){
+            JOptionPane.showMessageDialog(this, "비밀번호를 입력해야 합니다.");
+            tfPwd.requestFocus();
+            return;
+        }
+        //2
+        int result = dao.loginCheck(id, pwd);
+        
+        String msg = "";
+        //3
+        if(result == MemberDAO.LOGIN_OK){
+            msg = id+"님 로그인되었습니다.";
+            JOptionPane.showMessageDialog(this, msg);
+            this.dispose();
+            
+            ProductMain f = new ProductMain();
+            f.setVisible(true);
+            return;
+        }else if(result == MemberDAO.PWD_DISAGREE){
+             msg = "비밀번호가 일치하지 않습니다.";
+        }else if(result == MemberDAO.USERID_NONE){
+             msg = "아이디가 존재하지 않습니다..";
+        }else {
+             msg = "로그인 처리 실패!";
+        }
+        JOptionPane.showMessageDialog(this, msg);
+    }
+
 }

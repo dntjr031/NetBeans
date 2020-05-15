@@ -7,18 +7,31 @@ package com.swingapp.view;
 
 import com.swingapp.product.model.ProductDAO;
 import com.swingapp.product.model.ProductDTO;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
+import javax.swing.JTabbedPane;
+import javax.swing.SwingConstants;
+import javax.swing.plaf.TabbedPaneUI;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author STU-03
  */
-public class ProductMain extends javax.swing.JFrame {
+public class ProductMain extends javax.swing.JFrame implements ItemListener{
     private String[] colNames = {"번호", "상품명","가격"};
     private DefaultTableModel model;
     private ProductDAO dao;
@@ -28,6 +41,7 @@ public class ProductMain extends javax.swing.JFrame {
     public ProductMain() {
         initComponents();
         init();
+        addEvent();
         
     }
 
@@ -48,7 +62,7 @@ public class ProductMain extends javax.swing.JFrame {
         btEdit = new javax.swing.JButton();
         btDel = new javax.swing.JButton();
         btExit = new javax.swing.JButton();
-        jTabbedPane1 = new javax.swing.JTabbedPane();
+        tabbedPane = new javax.swing.JTabbedPane();
         tab1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         table = new javax.swing.JTable();
@@ -146,6 +160,7 @@ public class ProductMain extends javax.swing.JFrame {
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("상품설명"));
 
         taDesc.setColumns(20);
+        taDesc.setLineWrap(true);
         taDesc.setRows(5);
         jScrollPane2.setViewportView(taDesc);
 
@@ -216,7 +231,7 @@ public class ProductMain extends javax.swing.JFrame {
                 .addContainerGap(9, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("상품등록", tab1);
+        tabbedPane.addTab("상품등록", tab1);
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("조회조건"));
 
@@ -227,6 +242,7 @@ public class ProductMain extends javax.swing.JFrame {
         group.add(rdPrice);
         rdPrice.setText("가격으로 검색");
 
+        cbPdName.setMaximumRowCount(6);
         cbPdName.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jLabel7.setText(" ~ ");
@@ -299,7 +315,7 @@ public class ProductMain extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab("상품검색", tab2);
+        tabbedPane.addTab("상품검색", tab2);
 
         jLabel6.setText("아이디 : ");
 
@@ -315,7 +331,7 @@ public class ProductMain extends javax.swing.JFrame {
                 .addComponent(tfId, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(17, 17, 17))
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 674, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(tabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 674, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -323,7 +339,7 @@ public class ProductMain extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTabbedPane1)
+                .addComponent(tabbedPane)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
@@ -399,7 +415,6 @@ public class ProductMain extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JRadioButton rdPdName;
     private javax.swing.JRadioButton rdPrice;
@@ -407,6 +422,7 @@ public class ProductMain extends javax.swing.JFrame {
     private javax.swing.JTextField taId;
     private javax.swing.JPanel tab1;
     private javax.swing.JPanel tab2;
+    private javax.swing.JTabbedPane tabbedPane;
     private javax.swing.JTable table;
     private javax.swing.JTable table2;
     private javax.swing.JTextField tfId;
@@ -440,6 +456,7 @@ public class ProductMain extends javax.swing.JFrame {
             return;
         }
         
+        DecimalFormat df = new DecimalFormat("#,###");
         // table에 db에서 읽어온 데이터를 출력해야 한다
         //1) String 2차원 배열이 필요함
         String[][] data = new String[list.size()][3];
@@ -453,7 +470,7 @@ public class ProductMain extends javax.swing.JFrame {
             
             data[i][0] = no + "";
             data[i][1] = pdname;
-            data[i][2] = price + "";
+            data[i][2] = df.format(price);
         }
         
         //3) model에 2차원 배열의 데이터를 넣는다.
@@ -461,6 +478,15 @@ public class ProductMain extends javax.swing.JFrame {
         
         //4) table에 model을 연결해서 보이게 한다.
         table.setModel(model);
+        
+        //각 컬럼 사이즈 조절하기
+        table.getColumnModel().getColumn(0).setPreferredWidth(40);
+        table.getColumnModel().getColumn(1).setPreferredWidth(120);
+        
+        //가격 오른쪽 정렬하기
+        DefaultTableCellRenderer dtcr = new DefaultTableCellRenderer();
+        dtcr.setHorizontalAlignment(SwingConstants.RIGHT);
+        table.getColumnModel().getColumn(2).setCellRenderer(dtcr);
         
     }
     private void addPd() throws SQLException{
@@ -499,5 +525,149 @@ public class ProductMain extends javax.swing.JFrame {
         tfPrice.setText("");
         tfRegdate.setText("");
         taDesc.setText("");
+    }
+    
+    /** Event 연결
+     * 
+     */
+    private void addEvent() {
+        table.addMouseListener(new EventHandler());
+        btEdit.addActionListener(new EventHandler());
+        
+        cbPdName.addItemListener(this);
+        
+        tabbedPane.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                JTabbedPane tpane = (JTabbedPane)e.getSource();
+                int index = tpane.getSelectedIndex();
+                System.out.println("선택한 index=" + index);
+                
+                if(index == 0){
+                    clear_tf();
+                    try {
+                        showAll();
+                    } catch (SQLException sQLException) {
+                        sQLException.printStackTrace();
+                    }
+                }else if ( index == 1){
+                    clear_if2();
+                }
+            }
+
+        
+            
+        });
+    }
+     private void clear_if2() {
+        rdPdName.setSelected(true);
+        tfPrice1.setText("");
+        tfPrice2.setText("");
+        
+        //상품명조회해서 콤보박스에 출력
+        showPdName();
+    }
+
+    private void showPdName() {
+        try {
+            //1
+            //2
+            Vector<String> vec = dao.selectPdName();
+            //3
+            DefaultComboBoxModel<String> dcb = new DefaultComboBoxModel<>(vec);
+            cbPdName.setModel(dcb);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        
+    }
+
+    @Override
+    public void itemStateChanged(ItemEvent e) {
+        //콤보박스가 선택되면 상품명으로 검색 라디오버튼이 자동으로
+        // 선택되도록 설정
+        if(e.getSource() == cbPdName){
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                rdPdName.setSelected(true);
+            }
+        }
+    }
+    
+    class EventHandler extends MouseAdapter implements ActionListener{
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            int row = table.getSelectedRow();
+            String str = (String)table.getValueAt(row, 0);
+            
+            try {
+                //no에 해당하는 레코드 조회
+                //db작업
+                ProductDTO dto = dao.selectByNo(Integer.parseInt(str));
+                
+                tfNo.setText(dto.getNo() + "");
+                tfPdName.setText(dto.getProductName());
+                tfPrice.setText(dto.getPrice() + "");
+                taDesc.setText(dto.getDescription());
+                tfRegdate.setText(dto.getRegDate() + "");
+                
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            
+            try {
+                if (e.getSource() == btEdit) {
+                    editProduct();
+                } else if (e.getSource() == btDel) {
+                    delProduct();
+                }
+            } catch (SQLException sQLException) {
+                sQLException.printStackTrace();
+            }
+            
+        }
+
+        private void editProduct() throws SQLException {
+            //1
+            String no = tfNo.getText();
+            String pdNmae = tfPdName.getText();
+            String price = tfPrice.getText();
+            String desc = taDesc.getText();
+            
+            if(no == null || no.isEmpty()){
+                JOptionPane.showMessageDialog(ProductMain.this, "번호가 선택되도록 하세요!");
+                return;
+            }
+            if(pdNmae == null || pdNmae.isEmpty()){
+                JOptionPane.showMessageDialog(ProductMain.this, "상품명을 입력하세요!");
+                return;
+            }
+            
+            //2
+            ProductDTO dto = new ProductDTO();
+            
+            dto.setDescription(desc);
+            dto.setNo(Integer.parseInt(no));
+            dto.setPrice(Integer.parseInt(price));
+            dto.setProductName(pdNmae);
+            
+            int cnt = dao.editProduct(dto);
+            
+            //3
+            if(cnt>0){
+                JOptionPane.showMessageDialog(ProductMain.this, "수정 완료!");
+            }else{
+                JOptionPane.showMessageDialog(ProductMain.this, "수정 실패!");
+            }
+           
+        }
+        private void delProduct() {
+            
+        }
+        
     }
 }
