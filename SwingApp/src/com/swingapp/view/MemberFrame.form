@@ -280,6 +280,9 @@
     <Component class="javax.swing.JTextField" name="tfTel1">
     </Component>
     <Component class="javax.swing.JTextField" name="tfZipcode">
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JButton" name="btZipcode">
       <Properties>
@@ -287,8 +290,14 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="tfAddress1">
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JTextField" name="tfAddress2">
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
+      </AuxValues>
     </Component>
   </SubComponents>
 </Form>

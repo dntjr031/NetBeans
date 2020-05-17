@@ -276,14 +276,14 @@ public class MemberFrame extends javax.swing.JFrame implements ActionListener{
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JTextField tfAddress1;
-    private javax.swing.JTextField tfAddress2;
+    public javax.swing.JTextField tfAddress1;
+    public javax.swing.JTextField tfAddress2;
     public javax.swing.JTextField tfId;
     private javax.swing.JTextField tfName;
     private javax.swing.JTextField tfPwd;
     private javax.swing.JTextField tfTel1;
     private javax.swing.JTextField tfTel2;
-    private javax.swing.JTextField tfZipcode;
+    public javax.swing.JTextField tfZipcode;
     private javax.swing.JTextField tfmail1;
     private javax.swing.JTextField tfmail2;
     // End of variables declaration//GEN-END:variables

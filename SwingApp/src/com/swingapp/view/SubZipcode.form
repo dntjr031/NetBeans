@@ -95,6 +95,8 @@
                 <Column editable="true" title="&#xbc88;&#xc9c0;" type="java.lang.Object"/>
               </Table>
             </Property>
+            <Property name="cellSelectionEnabled" type="boolean" value="true"/>
+            <Property name="dragEnabled" type="boolean" value="true"/>
           </Properties>
         </Component>
       </SubComponents>

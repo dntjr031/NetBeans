@@ -5,15 +5,26 @@
  */
 package com.swingapp.view;
 
+import com.swingapp.zipcode.model.ZipcodeDAO;
+import com.swingapp.zipcode.model.ZipcodeDTO;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author STU-03
  */
-public class SubZipcode extends javax.swing.JFrame {
+public class SubZipcode extends javax.swing.JFrame implements ActionListener{
 
     private MemberFrame memberFrame;
+    private ZipcodeDAO dao = new ZipcodeDAO();
+    private String[] row = {"우편번호","시도","구군","동","번지"};
+    DefaultTableModel model;
     /**
      * Creates new form SubZipcode
      */
@@ -61,6 +72,8 @@ public class SubZipcode extends javax.swing.JFrame {
                 "우편번호", "시도", "구군", "동", "번지"
             }
         ));
+        table.setCellSelectionEnabled(true);
+        table.setDragEnabled(true);
         scrollPane.setViewportView(table);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -147,9 +160,62 @@ public class SubZipcode extends javax.swing.JFrame {
     private void init() {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         
+        model = new DefaultTableModel();
     }
 
     private void addEvent() {
+        btClose.addActionListener(this);
+        btSearch.addActionListener(this);
+        tfDong.addActionListener(this);
         
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if(e.getSource() == btClose){
+            this.dispose();
+        }
+        if(e.getSource() == btSearch || e.getSource() == tfDong){
+            try {
+                selectByDong();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    private void selectByDong() throws SQLException {
+        //1
+        String dong = tfDong.getText();
+
+        //2
+        ArrayList<ZipcodeDTO> list = dao.selectByDong(dong);
+        
+        String[][] data = new String[list.size()][row.length];
+        //3
+        for (int i = 0; i < list.size(); i++) {
+            ZipcodeDTO dto = list.get(i);
+            
+            data[i][0] = dto.getZipcode();
+            data[i][1] = dto.getSido();
+            data[i][2] = dto.getGugun();
+            data[i][3] = dto.getDong();
+            
+            String bunji = "";
+            if(dto.getStartbunji() == null || dto.getStartbunji().isEmpty()){
+                
+            }else{
+                if(dto.getEndbunji() == null || dto.getEndbunji().isEmpty()){
+                    bunji = dto.getStartbunji();
+                }else{
+                    bunji = "(" + dto.getStartbunji() + " ~ " + dto.getEndbunji() + ")";
+                }
+            }
+            data[i][4] = bunji;
+            
+            
+        }
+        model.setDataVector(data, row);
+        table.setModel(model);
     }
 }
