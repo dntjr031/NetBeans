@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 /**
  *
@@ -119,5 +120,50 @@ public class MemberDAO {
             DBUtil.dbclose(ps, con);
         }
     
+    }
+    
+    public MemberDTO selectMember(String userId) throws SQLException{
+            Connection con = null;
+            PreparedStatement ps = null;
+            ResultSet rs = null;
+            
+            MemberDTO dto = new MemberDTO();
+            
+        try{
+            con = DBUtil.getConnection();
+            
+            String sql = "select * from member where userid=?";
+            ps = con.prepareCall(sql);
+            ps.setString(1, userId);
+            
+            rs = ps.executeQuery();
+            if(rs.next()){
+                int no = rs.getInt("no");
+                String name = rs.getString("name");
+                String pwd = rs.getString("pwd");
+                String email = rs.getString("email");
+                String hp = rs.getString("hp");
+                String zipcode = rs.getString("zipcode");
+                String address1 = rs.getString("address1");
+                String address2 = rs.getString("address2");
+                Timestamp regdate = rs.getTimestamp("regdate");
+                
+                dto.setAddress1(address1);
+                dto.setAddress2(address2);
+                dto.setEmail(email);
+                dto.setHp(hp);
+                dto.setName(name);
+                dto.setNo(no);
+                dto.setPwd(pwd);
+                dto.setRegdate(regdate);
+                dto.setUserid(userId);
+                dto.setZipcode(zipcode);
+            }
+            System.out.println("회원정보 조회 결과, dto=" + dto + ", 매개변수 userId=" + userId);
+            
+            return dto;
+        }finally{
+            DBUtil.dbclose(rs, ps, con);
+        }
     }
 }

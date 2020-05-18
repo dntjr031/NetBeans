@@ -9,6 +9,8 @@ import com.swingapp.member.model.MemberDAO;
 import com.swingapp.member.model.MemberDTO;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.sql.SQLException;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
@@ -18,12 +20,25 @@ import javax.swing.JOptionPane;
  *
  * @author STU-03
  */
-public class MemberFrame extends javax.swing.JFrame implements ActionListener{
+public class MemberFrame extends javax.swing.JFrame implements ActionListener, ItemListener{
 
     private LoginGUI loginGUI;
     private String[] emailArr
             = {"naver.com","nate.com","daum.net","gmail.com","직접입력"};
     private MemberDAO dao = new MemberDAO();
+    private boolean isDuplicate; // 중복확인 여부
+    private String userId;
+    private int memFlag;
+    private static final int MEMBER_REGISTER=1; // 회원가입
+    private static final int MEMBER_EDIT=2; //회원수정
+
+    public void setIsDuplicate(boolean isDuplicate) {
+        this.isDuplicate = isDuplicate;
+    }
+
+    public boolean getIsDuplicate() {
+        return isDuplicate;
+    }
     /**
      * Creates new form MemberFrame
      */
@@ -37,6 +52,15 @@ public class MemberFrame extends javax.swing.JFrame implements ActionListener{
     public MemberFrame(LoginGUI loginGUI) {
         this();
         this.loginGUI = loginGUI;
+        memFlag = MEMBER_REGISTER;
+        settingMember();
+    }
+    
+    public MemberFrame(String userId) {
+        this();
+        this.userId = userId;
+        memFlag = MEMBER_EDIT;
+        settingMember();
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -297,6 +321,8 @@ public class MemberFrame extends javax.swing.JFrame implements ActionListener{
         */
         DefaultComboBoxModel model = new DefaultComboBoxModel(emailArr);
         cbMail.setModel(model);
+        
+        tfmail2.setEnabled(false);
     }
 
     private void addEvent() {
@@ -304,6 +330,8 @@ public class MemberFrame extends javax.swing.JFrame implements ActionListener{
         btCancle.addActionListener(this);
         btZipcode.addActionListener(this);
         btDup.addActionListener(this);
+        
+        cbMail.addItemListener(this);
     }
 
     @Override
@@ -313,14 +341,11 @@ public class MemberFrame extends javax.swing.JFrame implements ActionListener{
             try {
                 //회원가입
                 register();
-                this.dispose();
-                loginGUI.tfId.setText(tfId.getText());
-                loginGUI.tfPwd.requestFocus();
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
         }else if(e.getSource() == btCancle){
-            clear_tf();
+            dispose();
         }else if(e.getSource() == btDup){
             //중복확인
             SubUserId subUserId = new SubUserId(this, tfId.getText());
@@ -330,10 +355,6 @@ public class MemberFrame extends javax.swing.JFrame implements ActionListener{
             SubZipcode sz = new SubZipcode(this);
             sz.setVisible(true);
         }
-        
-    }
-
-    private void clear_tf() {
         
     }
 
@@ -351,6 +372,28 @@ public class MemberFrame extends javax.swing.JFrame implements ActionListener{
         String zipcode = tfZipcode.getText();
         String address1 = tfAddress1.getText();
         String address2 = tfAddress2.getText();
+        
+        //유효성 검사
+        if(name == null || name.isEmpty()){
+            JOptionPane.showMessageDialog(this, "이름을 입력하세요");
+            tfName.requestFocus();
+            return;
+        }
+        if(id == null || id.isEmpty()){
+            JOptionPane.showMessageDialog(this, "아이디를 입력하세요");
+            tfId.requestFocus();
+            return;
+        }
+        if(pwd == null || pwd.isEmpty()){
+            JOptionPane.showMessageDialog(this, "비밀번호를 입력하세요");
+            tfPwd.requestFocus();
+            return;
+        }
+        if(!isDuplicate){
+            JOptionPane.showMessageDialog(this, "중복확인을 하세요");
+            btDup.requestFocus();
+            return;
+        }
         
         String email = "";
         String tel = "";
@@ -379,7 +422,99 @@ public class MemberFrame extends javax.swing.JFrame implements ActionListener{
         
         int cnt = dao.insertMember(dto);
         //3
-        String result = cnt>0 ?"회원가입 완료!" : "회원가입 실패!";
-        JOptionPane.showMessageDialog(this, result);
+        if(cnt>0){
+            JOptionPane.showMessageDialog(this, "회원가입 완료!!");
+            this.dispose();
+            loginGUI.tfId.setText(tfId.getText());
+            loginGUI.tfPwd.requestFocus();
+        }else{
+            JOptionPane.showMessageDialog(this, "회원가입 실패!");
+        }
+        
     }
+
+    private void settingMember() {
+        if(memFlag == MEMBER_REGISTER){
+            setTitle("회원가입");
+            btAdd.setText("회원가입");
+            tfName.setEditable(true);
+            tfPwd.setEditable(true);
+            tfId.setEditable(true);
+            btDup.setEnabled(true);
+        }else if(memFlag == MEMBER_EDIT){
+            setTitle("회원 정보 수정");
+            btAdd.setText("회원수정");
+            tfName.setEditable(false);
+            tfPwd.setEditable(true);
+            tfId.setEditable(false);
+            btDup.setEnabled(false);
+            
+            try {
+                showMember();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    private void showMember() throws SQLException {
+        MemberDTO dto = dao.selectMember(userId);
+        
+        tfAddress1.setText(dto.getAddress1());
+        tfAddress2.setText(dto.getAddress2());
+        tfZipcode.setText(dto.getZipcode());
+        tfName.setText(dto.getName());
+        tfId.setText(dto.getUserid());
+        
+        
+        String email=dto.getEmail();
+        String hp=dto.getHp();
+        
+        if(hp!=null && !hp.isEmpty()){
+            String[] hparr = hp.split("-");
+            tfTel1.setText(hparr[1]);
+            tfTel2.setText(hparr[2]);
+            cbTel.setSelectedItem(hparr[0]);
+        }
+        
+        if(email!=null && !email.isEmpty()){
+            String[] emails = email.split("@");
+            tfmail1.setText(emails[0]);
+            
+            String email2 = emails[1];
+            boolean emailExist = false;
+            for (int i = 0; i < emailArr.length; i++) {
+                if(email2.equals(emailArr[i])){
+                    emailExist = true;
+                    break;
+                }
+            }
+            
+            if(emailExist){
+                cbMail.setSelectedItem(email2);
+            }else{
+                cbMail.setSelectedItem("직접입력");
+                tfmail2.setText(email2);
+                tfmail2.setEnabled(true);
+            }
+        }
+    }
+
+    @Override
+    public void itemStateChanged(ItemEvent e) {
+        if(e.getSource() == cbMail){
+            if(e.getStateChange() == ItemEvent.SELECTED){
+                String sel = (String) cbMail.getSelectedItem();
+                if(sel.equals("직접입력")){
+                    tfmail2.setEnabled(true);
+                    tfmail2.requestFocus();
+                    tfmail2.setText("");
+                }else{
+                    tfmail2.setText("");
+                    tfmail2.setEnabled(false);
+                }
+            }
+        }
+    }
+    
 }

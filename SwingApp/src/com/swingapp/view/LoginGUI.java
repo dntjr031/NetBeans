@@ -221,7 +221,7 @@ public class LoginGUI extends javax.swing.JFrame implements ActionListener{
             JOptionPane.showMessageDialog(this, msg);
             this.dispose();
             
-            ProductMain f = new ProductMain();
+            ProductMain f = new ProductMain(id);
             f.setVisible(true);
             return;
         }else if(result == MemberDAO.PWD_DISAGREE){

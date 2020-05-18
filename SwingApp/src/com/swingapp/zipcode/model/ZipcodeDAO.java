@@ -28,7 +28,7 @@ public class ZipcodeDAO {
             con = DBUtil.getConnection();
             
             String sql = "select * from zipcode where dong like '%' || ? || '%' "
-                    + "order by zipcode";
+                    + "order by STARTBUNJI";
             ps = con.prepareCall(sql);
             
             ps.setString(1, dong);

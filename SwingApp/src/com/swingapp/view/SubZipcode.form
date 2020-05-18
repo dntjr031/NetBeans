@@ -81,6 +81,10 @@
       </Properties>
     </Component>
     <Container class="javax.swing.JScrollPane" name="scrollPane">
+      <Properties>
+        <Property name="enabled" type="boolean" value="false"/>
+        <Property name="focusable" type="boolean" value="false"/>
+      </Properties>
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
       <SubComponents>
@@ -95,8 +99,6 @@
                 <Column editable="true" title="&#xbc88;&#xc9c0;" type="java.lang.Object"/>
               </Table>
             </Property>
-            <Property name="cellSelectionEnabled" type="boolean" value="true"/>
-            <Property name="dragEnabled" type="boolean" value="true"/>
           </Properties>
         </Component>
       </SubComponents>

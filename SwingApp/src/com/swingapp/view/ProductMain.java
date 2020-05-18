@@ -23,7 +23,6 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingConstants;
-import javax.swing.plaf.TabbedPaneUI;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
@@ -35,6 +34,7 @@ public class ProductMain extends javax.swing.JFrame implements ItemListener{
     private String[] colNames = {"번호", "상품명","가격"};
     private DefaultTableModel model;
     private ProductDAO dao;
+    private String userId;
     /**
      * Creates new form ProductMain
      */
@@ -44,7 +44,14 @@ public class ProductMain extends javax.swing.JFrame implements ItemListener{
         addEvent();
         
     }
+    
+    public ProductMain(String userId) {
+        this();
+        this.userId=userId;
 
+        tfId.setText(userId);
+           
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -62,6 +69,7 @@ public class ProductMain extends javax.swing.JFrame implements ItemListener{
         btEdit = new javax.swing.JButton();
         btDel = new javax.swing.JButton();
         btExit = new javax.swing.JButton();
+        btMemEdit = new javax.swing.JButton();
         tabbedPane = new javax.swing.JTabbedPane();
         tab1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -126,6 +134,12 @@ public class ProductMain extends javax.swing.JFrame implements ItemListener{
         btExit.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btExit.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jToolBar1.add(btExit);
+
+        btMemEdit.setText("회원수정");
+        btMemEdit.setFocusable(false);
+        btMemEdit.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btMemEdit.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar1.add(btMemEdit);
 
         table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -328,7 +342,7 @@ public class ProductMain extends javax.swing.JFrame implements ItemListener{
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tfId, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(tfId, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(17, 17, 17))
             .addGroup(layout.createSequentialGroup()
                 .addComponent(tabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 674, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -400,6 +414,7 @@ public class ProductMain extends javax.swing.JFrame implements ItemListener{
     private javax.swing.JButton btDel;
     private javax.swing.JButton btEdit;
     private javax.swing.JButton btExit;
+    private javax.swing.JButton btMemEdit;
     private javax.swing.JButton btSearch;
     private javax.swing.JComboBox<String> cbPdName;
     private javax.swing.ButtonGroup group;
@@ -533,6 +548,8 @@ public class ProductMain extends javax.swing.JFrame implements ItemListener{
     private void addEvent() {
         table.addMouseListener(new EventHandler());
         btEdit.addActionListener(new EventHandler());
+        btDel.addActionListener(new EventHandler());
+        btMemEdit.addActionListener(new EventHandler());
         
         cbPdName.addItemListener(this);
         
@@ -624,6 +641,9 @@ public class ProductMain extends javax.swing.JFrame implements ItemListener{
                     editProduct();
                 } else if (e.getSource() == btDel) {
                     delProduct();
+                }else if(e.getSource() == btMemEdit){
+                    MemberFrame f = new MemberFrame(userId);
+                    f.setVisible(true);
                 }
             } catch (SQLException sQLException) {
                 sQLException.printStackTrace();

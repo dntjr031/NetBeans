@@ -9,6 +9,8 @@ import com.swingapp.zipcode.model.ZipcodeDAO;
 import com.swingapp.zipcode.model.ZipcodeDTO;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.swing.JFrame;
@@ -23,7 +25,7 @@ public class SubZipcode extends javax.swing.JFrame implements ActionListener{
 
     private MemberFrame memberFrame;
     private ZipcodeDAO dao = new ZipcodeDAO();
-    private String[] row = {"우편번호","시도","구군","동","번지"};
+    private String[] col = {"우편번호","시도","구군","동","번지"};
     DefaultTableModel model;
     /**
      * Creates new form SubZipcode
@@ -64,6 +66,9 @@ public class SubZipcode extends javax.swing.JFrame implements ActionListener{
 
         btClose.setText("닫기");
 
+        scrollPane.setEnabled(false);
+        scrollPane.setFocusable(false);
+
         table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -72,8 +77,6 @@ public class SubZipcode extends javax.swing.JFrame implements ActionListener{
                 "우편번호", "시도", "구군", "동", "번지"
             }
         ));
-        table.setCellSelectionEnabled(true);
-        table.setDragEnabled(true);
         scrollPane.setViewportView(table);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -161,6 +164,9 @@ public class SubZipcode extends javax.swing.JFrame implements ActionListener{
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         
         model = new DefaultTableModel();
+        
+        tableSize();
+        
     }
 
     private void addEvent() {
@@ -168,6 +174,40 @@ public class SubZipcode extends javax.swing.JFrame implements ActionListener{
         btSearch.addActionListener(this);
         tfDong.addActionListener(this);
         
+        table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                
+                if(e.getSource() == table){
+                    int row = table.getSelectedRow();
+                    String address="";
+                    String zipcode = table.getValueAt(row, 0).toString();
+                    for (int i = 1; i < 4; i++) {
+                        address += table.getValueAt(row, i) + " ";
+                    }
+                    memberFrame.tfZipcode.setText(zipcode);
+                    memberFrame.tfAddress1.setText(address);
+                }
+                
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if(e.getClickCount() == 2){
+                    if(e.getSource() == table){
+                    int row = table.getSelectedRow();
+                    String address="";
+                    String zipcode = table.getValueAt(row, 0).toString();
+                    for (int i = 1; i < 4; i++) {
+                        address += table.getValueAt(row, i) + " ";
+                    }
+                    memberFrame.tfZipcode.setText(zipcode);
+                    memberFrame.tfAddress1.setText(address);
+                    }
+                }
+            }
+            
+        });
     }
 
     @Override
@@ -187,12 +227,21 @@ public class SubZipcode extends javax.swing.JFrame implements ActionListener{
     private void selectByDong() throws SQLException {
         //1
         String dong = tfDong.getText();
-
+        
+        if(dong == null || dong.isEmpty()){
+            JOptionPane.showMessageDialog(this, "동을 입력하셔야 합니다");
+            return;
+        }
         //2
         ArrayList<ZipcodeDTO> list = dao.selectByDong(dong);
         
-        String[][] data = new String[list.size()][row.length];
+        if(list == null || list.isEmpty()){
+            JOptionPane.showMessageDialog(this, dong + "의 검색결과가 없습니다.");
+            tfDong.setText("");
+            tfDong.requestFocus();
+        }
         //3
+        String[][] data = new String[list.size()][col.length];
         for (int i = 0; i < list.size(); i++) {
             ZipcodeDTO dto = list.get(i);
             
@@ -200,7 +249,7 @@ public class SubZipcode extends javax.swing.JFrame implements ActionListener{
             data[i][1] = dto.getSido();
             data[i][2] = dto.getGugun();
             data[i][3] = dto.getDong();
-            
+            /*
             String bunji = "";
             if(dto.getStartbunji() == null || dto.getStartbunji().isEmpty()){
                 
@@ -211,11 +260,27 @@ public class SubZipcode extends javax.swing.JFrame implements ActionListener{
                     bunji = "(" + dto.getStartbunji() + " ~ " + dto.getEndbunji() + ")";
                 }
             }
+            */
+            String bunji = dto.getStartbunji();
+            String endbunji = dto.getEndbunji();
+            if(endbunji != null && !endbunji.isEmpty()){
+                bunji = "(" + bunji + " ~ " + endbunji + ")";
+            }
             data[i][4] = bunji;
             
             
         }
-        model.setDataVector(data, row);
+        model.setDataVector(data, col);
         table.setModel(model);
+        
+        tableSize();
+    }
+
+    private void tableSize() {
+        table.getColumnModel().getColumn(0).setPreferredWidth(70);
+        table.getColumnModel().getColumn(1).setPreferredWidth(90);
+        table.getColumnModel().getColumn(2).setPreferredWidth(70);
+        table.getColumnModel().getColumn(3).setPreferredWidth(90);
+        table.getColumnModel().getColumn(4).setPreferredWidth(125);
     }
 }

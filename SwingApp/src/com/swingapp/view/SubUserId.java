@@ -9,8 +9,6 @@ import com.swingapp.member.model.MemberDAO;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -158,6 +156,7 @@ public class SubUserId extends javax.swing.JFrame implements ActionListener{
             if(opt == JOptionPane.YES_OPTION){
                 this.dispose();
                 memberFrame.tfId.setText(userid);
+                memberFrame.setIsDuplicate(true); //중복확인 처리
             }
         }else if(result == MemberDAO.UNUSABLE){
             JOptionPane.showMessageDialog(this, userid +
