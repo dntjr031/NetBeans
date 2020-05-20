@@ -23,3 +23,6 @@
 hs_err_pid*
 /SwingApp/build/
 /SwingApp/dist/
+/ProjectStore/nbproject/private/
+/ProjectStore/dist/
+/ProjectStore/build/
