@@ -54,6 +54,7 @@ public class ProductGUI extends javax.swing.JFrame implements ActionListener{
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("상품관리");
+        setResizable(false);
 
         table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {

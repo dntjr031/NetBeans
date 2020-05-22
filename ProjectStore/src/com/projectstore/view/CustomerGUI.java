@@ -14,7 +14,9 @@ import javax.swing.JFrame;
  * @author STU-03
  */
 public class CustomerGUI extends javax.swing.JFrame implements ActionListener{
-
+    
+    private String userId;
+    private final boolean UPDATE=true, DETAIL=false;
     /**
      * Creates new form CustomerGUI
      */
@@ -42,16 +44,17 @@ public class CustomerGUI extends javax.swing.JFrame implements ActionListener{
         jTextField1 = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jTextField2 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        btInsert = new javax.swing.JButton();
+        btDetail = new javax.swing.JButton();
+        btUpdate = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
+        tfSearch = new javax.swing.JTextField();
+        btSearch = new javax.swing.JButton();
+        btDelete = new javax.swing.JButton();
         btClose = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -118,17 +121,17 @@ public class CustomerGUI extends javax.swing.JFrame implements ActionListener{
                 .addContainerGap(18, Short.MAX_VALUE))
         );
 
-        jButton1.setText("고객등록");
+        btInsert.setText("고객등록");
 
-        jButton2.setText("상세정보");
+        btDetail.setText("상세정보");
 
-        jButton3.setText("정보수정");
+        btUpdate.setText("정보수정");
 
         jLabel3.setText("이름 : ");
 
-        jButton4.setText("검색");
+        btSearch.setText("검색");
 
-        jButton5.setText("고객삭제");
+        btDelete.setText("고객삭제");
 
         btClose.setText("닫기");
 
@@ -140,22 +143,22 @@ public class CustomerGUI extends javax.swing.JFrame implements ActionListener{
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(18, 18, 18)
-                        .addComponent(jButton1)
+                        .addComponent(btInsert)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton2)
+                        .addComponent(btDetail)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton3)
+                        .addComponent(btUpdate)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton5))
+                        .addComponent(btDelete))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(tfSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton4))
+                                .addComponent(btSearch))
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 426, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -170,10 +173,10 @@ public class CustomerGUI extends javax.swing.JFrame implements ActionListener{
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btInsert, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btDetail, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 337, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -183,8 +186,8 @@ public class CustomerGUI extends javax.swing.JFrame implements ActionListener{
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton4)
+                    .addComponent(tfSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btSearch)
                     .addComponent(jLabel3)
                     .addComponent(btClose))
                 .addGap(15, 15, 15))
@@ -230,11 +233,11 @@ public class CustomerGUI extends javax.swing.JFrame implements ActionListener{
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btClose;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
+    private javax.swing.JButton btDelete;
+    private javax.swing.JButton btDetail;
+    private javax.swing.JButton btInsert;
+    private javax.swing.JButton btSearch;
+    private javax.swing.JButton btUpdate;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -245,11 +248,14 @@ public class CustomerGUI extends javax.swing.JFrame implements ActionListener{
     private javax.swing.JTable jTable2;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
+    private javax.swing.JTextField tfSearch;
     // End of variables declaration//GEN-END:variables
 
     private void addEvent() {
         btClose.addActionListener(this);
+        btInsert.addActionListener(this);
+        btUpdate.addActionListener(this);
+        btDetail.addActionListener(this);
     }
 
     private void init() {
@@ -261,6 +267,15 @@ public class CustomerGUI extends javax.swing.JFrame implements ActionListener{
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == btClose){
             dispose();
+        }else if(e.getSource() == btInsert){
+            CustomerInsertGUI ci = new CustomerInsertGUI(this);
+            ci.setVisible(true);
+        }else if(e.getSource() == btUpdate){
+            CustomerInsertGUI ci = new CustomerInsertGUI(userId, UPDATE);
+            ci.setVisible(true);
+        }else if(e.getSource() == btDetail){
+            CustomerInsertGUI ci = new CustomerInsertGUI(userId, DETAIL);
+            ci.setVisible(true);
         }
     }
 }

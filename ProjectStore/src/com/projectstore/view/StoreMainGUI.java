@@ -62,6 +62,7 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener{
         jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/—Pngtree—vector_shop_icon_3762863-1.png"))); // NOI18N
 
@@ -225,9 +226,7 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener{
                                 .addComponent(tfSearch2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                            .addComponent(btAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(27, 27, 27)
@@ -391,6 +390,9 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener{
         }else if(e.getSource() == btCustomer){
             CustomerGUI c = new CustomerGUI();
             c.setVisible(true);
+        }else if(e.getSource() == btAccount){
+            AccountGUI a = new AccountGUI();
+            a.setVisible(true);
         }
     }
 }
