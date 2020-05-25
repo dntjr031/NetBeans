@@ -61,7 +61,12 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="btSearch" min="-2" pref="158" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="btAccount" alignment="0" min="-2" pref="113" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="btAccount" min="-2" pref="113" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="btAccount1" min="-2" pref="113" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
                   </Group>
               </Group>
@@ -99,8 +104,9 @@
                               <Component id="btLogout" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Component id="btAccount" alignment="0" min="-2" pref="107" max="-2" attributes="0"/>
+                          <Component id="btAccount1" min="-2" pref="107" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="btSearch" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="cbSearch" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -145,11 +151,11 @@
         <Component class="javax.swing.JTable" name="tableList">
           <Properties>
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-              <Table columnCount="4" rowCount="4">
-                <Column editable="true" title="Title 1" type="java.lang.Object"/>
-                <Column editable="true" title="Title 2" type="java.lang.Object"/>
-                <Column editable="true" title="Title 3" type="java.lang.Object"/>
-                <Column editable="true" title="Title 4" type="java.lang.Object"/>
+              <Table columnCount="4" rowCount="0">
+                <Column editable="true" title="&#xc0c1;&#xd488;&#xcf54;&#xb4dc;" type="java.lang.Object"/>
+                <Column editable="true" title="&#xc0c1;&#xd488;&#xc774;&#xb984;" type="java.lang.Object"/>
+                <Column editable="true" title="&#xc0c1;&#xd488;&#xac00;&#xaca9;" type="java.lang.Object"/>
+                <Column editable="true" title="&#xc0c1;&#xd488;&#xc7ac;&#xace0;" type="java.lang.Object"/>
               </Table>
             </Property>
           </Properties>
@@ -234,14 +240,14 @@
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
           <SubComponents>
-            <Component class="javax.swing.JTable" name="jTable1">
+            <Component class="javax.swing.JTable" name="tableSel">
               <Properties>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                  <Table columnCount="4" rowCount="4">
-                    <Column editable="true" title="Title 1" type="java.lang.Object"/>
-                    <Column editable="true" title="Title 2" type="java.lang.Object"/>
-                    <Column editable="true" title="Title 3" type="java.lang.Object"/>
-                    <Column editable="true" title="Title 4" type="java.lang.Object"/>
+                  <Table columnCount="4" rowCount="0">
+                    <Column editable="true" title="&#xc0c1;&#xd488;&#xcf54;&#xb4dc;" type="java.lang.Object"/>
+                    <Column editable="true" title="&#xc0c1;&#xd488;&#xc774;&#xb984;" type="java.lang.Object"/>
+                    <Column editable="true" title="&#xc0c1;&#xd488;&#xac00;&#xaca9;" type="java.lang.Object"/>
+                    <Column editable="true" title="&#xac1c;&#xc218;" type="java.lang.Object"/>
                   </Table>
                 </Property>
               </Properties>
@@ -371,6 +377,25 @@
       <Properties>
         <Property name="text" type="java.lang.String" value=" ~ "/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="btAccount1">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Dialog" size="14" style="1"/>
+        </Property>
+        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="0" green="0" red="0" type="rgb"/>
+        </Property>
+        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+          <Image iconType="3" name="/icon/Seller.png"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="&#xd310;&#xb9e4;&#xc6d0;&#xad00;&#xb9ac;"/>
+        <Property name="horizontalTextPosition" type="int" value="0"/>
+        <Property name="verticalTextPosition" type="int" value="3"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btAccount1ActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

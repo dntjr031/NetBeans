@@ -5,8 +5,12 @@
  */
 package com.projectstore.view;
 
+import com.model.seller.SellerDAO;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -38,9 +42,9 @@ public class LoginGUI extends javax.swing.JFrame implements ActionListener{
         lbId = new javax.swing.JLabel();
         lbPwd = new javax.swing.JLabel();
         tfId = new javax.swing.JTextField();
-        tfPwd = new javax.swing.JTextField();
         btLogin = new javax.swing.JButton();
         btClose = new javax.swing.JButton();
+        tfPwd = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
@@ -62,13 +66,6 @@ public class LoginGUI extends javax.swing.JFrame implements ActionListener{
 
         tfId.setBackground(new java.awt.Color(114, 214, 191));
 
-        tfPwd.setBackground(new java.awt.Color(114, 214, 191));
-        tfPwd.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tfPwdActionPerformed(evt);
-            }
-        });
-
         btLogin.setBackground(new java.awt.Color(114, 214, 191));
         btLogin.setForeground(new java.awt.Color(102, 102, 102));
         btLogin.setText("로그인");
@@ -81,6 +78,8 @@ public class LoginGUI extends javax.swing.JFrame implements ActionListener{
         btClose.setBackground(new java.awt.Color(114, 214, 191));
         btClose.setForeground(new java.awt.Color(102, 102, 102));
         btClose.setText("닫기");
+
+        tfPwd.setBackground(new java.awt.Color(114, 214, 191));
 
         javax.swing.GroupLayout plLayout = new javax.swing.GroupLayout(pl);
         pl.setLayout(plLayout);
@@ -95,11 +94,11 @@ public class LoginGUI extends javax.swing.JFrame implements ActionListener{
                             .addComponent(lbPwd))
                         .addGap(29, 29, 29)
                         .addGroup(plLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(tfId)
-                            .addComponent(tfPwd, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(tfId, javax.swing.GroupLayout.DEFAULT_SIZE, 173, Short.MAX_VALUE)
+                            .addComponent(tfPwd)))
                     .addGroup(plLayout.createSequentialGroup()
                         .addComponent(btLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
                         .addComponent(btClose, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -141,10 +140,6 @@ public class LoginGUI extends javax.swing.JFrame implements ActionListener{
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void tfPwdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfPwdActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tfPwdActionPerformed
 
     private void btLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLoginActionPerformed
         // TODO add your handling code here:
@@ -194,7 +189,7 @@ public class LoginGUI extends javax.swing.JFrame implements ActionListener{
     private javax.swing.JLabel lbPwd;
     private javax.swing.JPanel pl;
     private javax.swing.JTextField tfId;
-    private javax.swing.JTextField tfPwd;
+    private javax.swing.JPasswordField tfPwd;
     // End of variables declaration//GEN-END:variables
 
     private void init() {
@@ -209,15 +204,50 @@ public class LoginGUI extends javax.swing.JFrame implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == btLogin){
-            StoreMainGUI s = new StoreMainGUI();
-            s.setVisible(true);
-            dispose();
+            try {
+                login();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+           
         }else if(e.getSource() == btClose){
             int n = JOptionPane.showConfirmDialog(this, "정말 종료하시겠습니까?", "프로그램 종료",
                                 JOptionPane.YES_NO_OPTION);
             if(n == JOptionPane.YES_OPTION){
                 System.exit(0);
             }
+        }
+    }
+
+    private void login() throws SQLException {
+        String id = tfId.getText();
+        String pwd = tfPwd.getText();
+        if(id==null || id.isEmpty()){
+            JOptionPane.showMessageDialog(this, "아이디를 입력해야 합니다.");
+            tfId.requestFocus(true);
+            return;
+        }
+        if(pwd==null || pwd.isEmpty()){
+            JOptionPane.showMessageDialog(this, "비밀번호를 입력하세요");
+            tfPwd.requestFocus(true);
+            return;
+        }
+        SellerDAO dao = new SellerDAO();
+        int n = dao.login(id, pwd);
+        if(n == SellerDAO.LOGIN_OK){
+            JOptionPane.showMessageDialog(this, "로그인완료!");
+            StoreMainGUI s = new StoreMainGUI(id);
+            s.setVisible(true);
+            dispose();
+        }else if(n == SellerDAO.LOGIN_NOID){
+            JOptionPane.showMessageDialog(this, "아이디가 없습니다");
+            return;
+        }else if(n == SellerDAO.LOGIN_NOPWD){
+            JOptionPane.showMessageDialog(this, "비밀번호가 틀렸습니다.");
+            return;
+        }else{
+            JOptionPane.showMessageDialog(this, "로그인 오류");
+            return;
         }
     }
 }

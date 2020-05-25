@@ -5,18 +5,32 @@
  */
 package com.projectstore.view;
 
+import com.model.product.ProductDAO;
+import com.model.product.ProductDTO;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import javax.swing.JFrame;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author STU-03
  */
-public class StoreMainGUI extends javax.swing.JFrame implements ActionListener{
+public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
+
+    private String selId;
+    private ProductDAO dao = new ProductDAO();
+    private String[] colList = {"상품코드", "상품이름", "상품가격", "재고"};
+    private String[] colSel = {"상품코드", "상품이름", "상품가격", "개수"};
+    private DefaultTableModel modelList = new DefaultTableModel();
+    private DefaultTableModel modelSel = new DefaultTableModel();
 
     /**
      * Creates new form StoreMain
@@ -25,6 +39,12 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener{
         initComponents();
         init();
         addEvent();
+    }
+
+    StoreMainGUI(String id) {
+        this();
+        selId = id;
+        tfUserId.setText(id);
     }
 
     /**
@@ -43,7 +63,7 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener{
         tablePanmae = new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
         scroll3 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tableSel = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         tfTotal = new javax.swing.JTextField();
         btPayment = new javax.swing.JButton();
@@ -60,6 +80,7 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener{
         tfSearch1 = new javax.swing.JTextField();
         tfSearch2 = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
+        btAccount1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -68,13 +89,10 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener{
 
         tableList.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "상품코드", "상품이름", "상품가격", "상품재고"
             }
         ));
         scroll1.setViewportView(tableList);
@@ -94,18 +112,15 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener{
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("결제 목록"));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tableSel.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "상품코드", "상품이름", "상품가격", "개수"
             }
         ));
-        scroll3.setViewportView(jTable1);
+        scroll3.setViewportView(tableSel);
 
         jLabel1.setText("결제금액");
 
@@ -191,6 +206,18 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener{
 
         jLabel4.setText(" ~ ");
 
+        btAccount1.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        btAccount1.setForeground(new java.awt.Color(0, 0, 0));
+        btAccount1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/Seller.png"))); // NOI18N
+        btAccount1.setText("판매원관리");
+        btAccount1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btAccount1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btAccount1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btAccount1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -226,7 +253,11 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener{
                                 .addComponent(tfSearch2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(btAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btAccount1, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(14, 14, 14)))))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(27, 27, 27)
@@ -254,8 +285,9 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener{
                                 .addComponent(tfUserId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jLabel3)
                                 .addComponent(btLogout))
-                            .addComponent(btAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(16, 16, 16)
+                            .addComponent(btAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btAccount1, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btSearch)
                             .addComponent(cbSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -278,6 +310,10 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener{
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btAccount1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAccount1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btAccount1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -316,6 +352,7 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener{
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btAccount;
+    private javax.swing.JButton btAccount1;
     private javax.swing.JButton btCancle;
     private javax.swing.JButton btCustomer;
     private javax.swing.JButton btDelete;
@@ -329,12 +366,12 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener{
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JScrollPane scroll1;
     private javax.swing.JScrollPane scroll2;
     private javax.swing.JScrollPane scroll3;
     private javax.swing.JTable tableList;
     private javax.swing.JTable tablePanmae;
+    private javax.swing.JTable tableSel;
     private javax.swing.JTextField tfSearch1;
     private javax.swing.JTextField tfSearch2;
     private javax.swing.JTextField tfTotal;
@@ -343,6 +380,7 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener{
 
     private void init() {
         setLocation(400, 100);
+        searchAll();
     }
 
     private void addEvent() {
@@ -355,42 +393,85 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener{
         btSearch.addActionListener(this);
         btLogout.addActionListener(this);
         cbSearch.addItemListener(new EventHander());
+        tableList.addMouseListener(new EventHander());
     }
 
-    class EventHander implements ItemListener{
+    private void searchAll() {
+        try {
+            ArrayList<ProductDTO> list = dao.searchAll();
+            String[][] data = new String[list.size()][colList.length];
+            for (int i = 0; i < list.size(); i++) {
+                ProductDTO dto = list.get(i);
+
+                data[i][0] = dto.getpCode();
+                data[i][1] = dto.getpName() + "";
+                data[i][2] = dto.getPrice() + "";
+                data[i][3] = dto.getStock() + "";
+            }
+            modelList.setDataVector(data, colList);
+            tableList.setModel(modelList);
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    class EventHander extends MouseAdapter implements ItemListener {
 
         @Override
         public void itemStateChanged(ItemEvent e) {
-            if(e.getSource() == cbSearch){
-                String item = (String)cbSearch.getSelectedItem();
-                if(item.equals("가격")){
+            if (e.getSource() == cbSearch) {
+                String item = (String) cbSearch.getSelectedItem();
+                if (item.equals("가격")) {
                     tfSearch2.setEditable(true);
-                }else{
+                } else {
                     tfSearch2.setEditable(false);
                 }
             }
         }
-        
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            if (e.getSource() == tableList) {
+                int row = tableList.getSelectedRow();
+                String str = (String) tableList.getValueAt(row, 0);
+
+                String[][] data = new String[1][colSel.length];
+                try {
+                    ProductDTO dto = dao.selectBycode(str);
+                    data[0][0] = dto.getpCode()+"";
+                    data[0][1] = dto.getpName();
+                    data[0][2] = dto.getPrice()+"";
+                    data[0][3] = 1+"";
+                    modelSel.setDataVector(data, colSel);
+                    tableSel.setModel(modelSel);
+
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+
     }
-    
+
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == btSearch){
-            
-        }else if(e.getSource() == btLogout){
+        if (e.getSource() == btSearch) {
+
+        } else if (e.getSource() == btLogout) {
             int n = JOptionPane.showConfirmDialog(this, "로그아웃 하시겠습니까?", "Logout", JOptionPane.YES_NO_OPTION);
-            if(n == JOptionPane.YES_OPTION){
+            if (n == JOptionPane.YES_OPTION) {
                 LoginGUI l = new LoginGUI();
                 l.setVisible(true);
                 dispose();
             }
-        }else if(e.getSource() == btProduct){
-            ProductGUI p =new ProductGUI();
+        } else if (e.getSource() == btProduct) {
+            ProductGUI p = new ProductGUI();
             p.setVisible(true);
-        }else if(e.getSource() == btCustomer){
+        } else if (e.getSource() == btCustomer) {
             CustomerGUI c = new CustomerGUI();
             c.setVisible(true);
-        }else if(e.getSource() == btAccount){
+        } else if (e.getSource() == btAccount) {
             AccountGUI a = new AccountGUI();
             a.setVisible(true);
         }
