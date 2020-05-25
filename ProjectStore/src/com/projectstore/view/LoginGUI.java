@@ -9,8 +9,6 @@ import com.model.seller.SellerDAO;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -50,7 +48,7 @@ public class LoginGUI extends javax.swing.JFrame implements ActionListener{
         setBackground(new java.awt.Color(255, 255, 255));
         setResizable(false);
 
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/제목_없는_아트워크 1.jpg"))); // NOI18N
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/제목_없는_아트워크 1.jpg"))); // NOI18N
 
         pl.setBackground(new java.awt.Color(255, 255, 255));
         pl.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.lightGray, java.awt.Color.white, java.awt.Color.lightGray, java.awt.Color.white));

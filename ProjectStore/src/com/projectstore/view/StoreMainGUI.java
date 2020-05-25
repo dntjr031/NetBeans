@@ -13,7 +13,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
@@ -31,6 +30,8 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
     private String[] colSel = {"상품코드", "상품이름", "상품가격", "개수"};
     private DefaultTableModel modelList = new DefaultTableModel();
     private DefaultTableModel modelSel = new DefaultTableModel();
+    private int sum = 0;
+    private int count = 0;
 
     /**
      * Creates new form StoreMain
@@ -125,6 +126,12 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
         jLabel1.setText("결제금액");
 
         tfTotal.setEditable(false);
+        tfTotal.setText("0");
+        tfTotal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tfTotalActionPerformed(evt);
+            }
+        });
 
         btPayment.setText("결제");
 
@@ -315,6 +322,10 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
         // TODO add your handling code here:
     }//GEN-LAST:event_btAccount1ActionPerformed
 
+    private void tfTotalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfTotalActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfTotalActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -381,6 +392,12 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
     private void init() {
         setLocation(400, 100);
         searchAll();
+        modelSel.addColumn("상품코드");
+        modelSel.addColumn("상품이름");
+        modelSel.addColumn("상품가격");
+        modelSel.addColumn("개수");
+        tfTotal.setText(sum + "");
+
     }
 
     private void addEvent() {
@@ -403,8 +420,8 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
             for (int i = 0; i < list.size(); i++) {
                 ProductDTO dto = list.get(i);
 
-                data[i][0] = dto.getpCode();
-                data[i][1] = dto.getpName() + "";
+                data[i][0] = dto.getPcode();
+                data[i][1] = dto.getPname() + "";
                 data[i][2] = dto.getPrice() + "";
                 data[i][3] = dto.getStock() + "";
             }
@@ -436,15 +453,18 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
                 int row = tableList.getSelectedRow();
                 String str = (String) tableList.getValueAt(row, 0);
 
-                String[][] data = new String[1][colSel.length];
+                String[] data = new String[colSel.length];
                 try {
                     ProductDTO dto = dao.selectBycode(str);
-                    data[0][0] = dto.getpCode()+"";
-                    data[0][1] = dto.getpName();
-                    data[0][2] = dto.getPrice()+"";
-                    data[0][3] = 1+"";
-                    modelSel.setDataVector(data, colSel);
+                    data[0] = dto.getPcode() + "";
+                    data[1] = dto.getPname();
+                    data[2] = dto.getPrice() + "";
+                    data[3] = 1 + "";
+                    modelSel.addRow(data);
                     tableSel.setModel(modelSel);
+                    sum += dto.getPrice();
+                    tfTotal.setText(sum + "");
+                    ++count;
 
                 } catch (SQLException ex) {
                     ex.printStackTrace();
@@ -474,6 +494,51 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
         } else if (e.getSource() == btAccount) {
             AccountGUI a = new AccountGUI();
             a.setVisible(true);
+        } else if (e.getSource() == btCancle) {
+            modelSel = new DefaultTableModel(colSel, 0);
+            tableSel.setModel(modelSel);
+            sum = 0;
+            tfTotal.setText(sum + "");
+        } else if (e.getSource() == btDelete) {
+            int row = tableSel.getSelectedRow();
+            String price = (String) tableSel.getValueAt(row, 2);
+            if (row == -1) {
+                JOptionPane.showMessageDialog(this, "삭제할 행을 선택해야 합니다.");
+                return;
+            }
+            modelSel.removeRow(row);
+            tableSel.setModel(modelSel);
+            sum -= Integer.parseInt(price);
+            tfTotal.setText(sum + "");
+        } else if (e.getSource() == btSearch) {
+            String item = (String) cbSearch.getSelectedItem();
+            String val1 = tfSearch1.getText();
+            String val2 = tfSearch2.getText();
+
+            if (val1 == null || val1.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "찾을 값을 입력하셔야 합니다.");
+                tfSearch1.requestFocus();
+                return;
+            }
+
+            if (item.equals("가격")) {
+
+                if (val2 == null || val2.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "범위를 입력하셔야 합니다.");
+                    tfSearch2.requestFocus();
+                    return;
+                }
+                dao.selectByPrice(Integer.parseInt(val1), Integer.parseInt(val2));
+
+            } else if (item.equals("상품명")) {
+                dao.selectByName(val1);
+            } else {
+                try {
+                    dao.selectBycode(val1);
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
         }
     }
 }
