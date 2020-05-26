@@ -261,7 +261,7 @@ public class SellerGUI extends javax.swing.JFrame implements ActionListener{
 
     private void init() {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLocation(500, 200);
+        setLocationRelativeTo(null);
     }
 
     @Override

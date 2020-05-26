@@ -326,7 +326,7 @@ public class SellerInsertGUI extends javax.swing.JFrame implements ActionListene
 
     private void init() {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLocation(700, 200);
+        setLocationRelativeTo(null);
     }
 
     private void addEvent() {

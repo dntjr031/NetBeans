@@ -5,6 +5,8 @@
  */
 package com.projectstore.view;
 
+import com.model.panmae.PanmaeDAO;
+import com.model.panmae.PanmaeDTO;
 import com.model.product.ProductDAO;
 import com.model.product.ProductDTO;
 import java.awt.event.ActionEvent;
@@ -15,6 +17,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -28,10 +32,14 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
     private ProductDAO dao = new ProductDAO();
     private String[] colList = {"상품코드", "상품이름", "상품가격", "재고"};
     private String[] colSel = {"상품코드", "상품이름", "상품가격", "개수"};
+    private String[] colPan = {"번호", "고객아이디", "상품코드", "개수","가격","판매원 아이디","거래날짜"};
     private DefaultTableModel modelList = new DefaultTableModel();
     private DefaultTableModel modelSel = new DefaultTableModel();
+    private DefaultTableModel modelPan = new DefaultTableModel();
     private int sum = 0;
     private int count = 0;
+    private ArrayList<ProductDTO> list;
+    private static ArrayList<ProductDTO> panmaeList;
 
     /**
      * Creates new form StoreMain
@@ -42,10 +50,11 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
         addEvent();
     }
 
-    StoreMainGUI(String id) {
+    public StoreMainGUI(String id) {
         this();
         selId = id;
         tfUserId.setText(id);
+        
     }
 
     /**
@@ -82,6 +91,7 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
         tfSearch2 = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         btAccount1 = new javax.swing.JButton();
+        btSearchAll = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -100,13 +110,10 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
 
         tablePanmae.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+
             }
         ));
         scroll2.setViewportView(tablePanmae);
@@ -127,11 +134,6 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
 
         tfTotal.setEditable(false);
         tfTotal.setText("0");
-        tfTotal.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tfTotalActionPerformed(evt);
-            }
-        });
 
         btPayment.setText("결제");
 
@@ -219,11 +221,8 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
         btAccount1.setText("판매원관리");
         btAccount1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btAccount1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        btAccount1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btAccount1ActionPerformed(evt);
-            }
-        });
+
+        btSearchAll.setText("전체조회");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -236,35 +235,33 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
                 .addComponent(scroll2, javax.swing.GroupLayout.PREFERRED_SIZE, 762, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(btSearchAll)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(cbSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tfSearch1, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tfSearch2, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(scroll1, javax.swing.GroupLayout.PREFERRED_SIZE, 621, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGap(51, 51, 51)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(35, 35, 35)
-                                .addComponent(btCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(41, 41, 41))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(cbSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(tfSearch1, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel4)
-                                .addGap(8, 8, 8)))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(tfSearch2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btAccount1, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(14, 14, 14)))))
+                        .addComponent(btProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(35, 35, 35)
+                        .addComponent(btCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(41, 41, 41)
+                        .addComponent(btAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btAccount1, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(14, 14, 14)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(27, 27, 27)
@@ -286,21 +283,20 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(tfUserId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel3)
-                                .addComponent(btLogout))
-                            .addComponent(btAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btAccount1, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btSearch)
-                            .addComponent(cbSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tfSearch1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tfSearch2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4))))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(tfUserId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel3)
+                        .addComponent(btLogout))
+                    .addComponent(btAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btAccount1, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btSearch)
+                    .addComponent(cbSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tfSearch1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tfSearch2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4)
+                    .addComponent(btSearchAll))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -317,14 +313,6 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void btAccount1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAccount1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btAccount1ActionPerformed
-
-    private void tfTotalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfTotalActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tfTotalActionPerformed
 
     /**
      * @param args the command line arguments
@@ -371,6 +359,7 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
     private javax.swing.JButton btPayment;
     private javax.swing.JButton btProduct;
     private javax.swing.JButton btSearch;
+    private javax.swing.JButton btSearchAll;
     private javax.swing.JComboBox<String> cbSearch;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -390,7 +379,10 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
     // End of variables declaration//GEN-END:variables
 
     private void init() {
-        setLocation(400, 100);
+        panmaeList = new ArrayList<>();
+        panListReset();
+        
+        setLocationRelativeTo(null);
         searchAll();
         modelSel.addColumn("상품코드");
         modelSel.addColumn("상품이름");
@@ -411,11 +403,12 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
         btLogout.addActionListener(this);
         cbSearch.addItemListener(new EventHander());
         tableList.addMouseListener(new EventHander());
+        btSearchAll.addActionListener(this);
     }
 
     private void searchAll() {
         try {
-            ArrayList<ProductDTO> list = dao.searchAll();
+            list = dao.searchAll();
             String[][] data = new String[list.size()][colList.length];
             for (int i = 0; i < list.size(); i++) {
                 ProductDTO dto = list.get(i);
@@ -433,11 +426,102 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
         }
     }
 
+    private void delete() {
+        int row = 0;
+            try {
+                row = tableSel.getSelectedRow();
+                if (row == -1) {
+                    throw new IndexOutOfBoundsException();
+                }
+            } catch (IndexOutOfBoundsException ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this, "삭제할 행을 선택해야 합니다.");
+                return;
+            }
+            String price = (String) tableSel.getValueAt(row, 2);
+
+            modelSel.removeRow(row);
+            tableSel.setModel(modelSel);
+            sum -= Integer.parseInt(price);
+            tfTotal.setText(sum + "");
+            panmaeList.remove(row);
+            System.out.println("row="+row);
+    }
+
+    private void search() {
+         String item = (String) cbSearch.getSelectedItem();
+            String val1 = tfSearch1.getText();
+            String val2 = tfSearch2.getText();
+            System.out.println("item=" + item + ", val1=" + val1 + ", val2=" + val2);
+            if (val1 == null || val1.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "찾을 값을 입력하셔야 합니다.");
+                tfSearch1.requestFocus();
+                return;
+            }
+
+            try {
+                if (item.equals("가격")) {
+                    if (val2 == null || val2.isEmpty()) {
+                        JOptionPane.showMessageDialog(this, "범위를 입력하셔야 합니다.");
+                        tfSearch2.requestFocus();
+                        return;
+                    }
+                    searchPrice(Integer.parseInt(val1), Integer.parseInt(val2));
+                } else if (item.equals("상품명")) {
+                    searchName(val1);
+                } else {
+                    searchCode(val1);
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+    }
+
+    private void payment() {
+        if(panmaeList == null || panmaeList.isEmpty()){
+            JOptionPane.showMessageDialog(this, "선택된 상품이 없습니다.");
+            dispose();
+        }
+        if(selId == null || selId.isEmpty()){
+            JOptionPane.showMessageDialog(this, "선택된 상품이 없습니다.");
+            dispose();
+        }
+        if(sum == 0){
+            JOptionPane.showMessageDialog(this, "선택된 상품이 없습니다.");
+            dispose();
+        }
+        
+        PanmaeGUI p = new PanmaeGUI(selId, panmaeList, sum, this);
+        p.setVisible(true);
+    }
+
+    public void panListReset() {
+        PanmaeDAO pdao = new PanmaeDAO();
+        ArrayList<PanmaeDTO> listpan = pdao.searchAll();
+        
+        String[][] data = new String[listpan.size()][colPan.length];
+        for (int i = 0; i < list.size(); i++) {
+            PanmaeDTO pdto = listpan.get(i);
+            data[i][0] = pdto.getNo()+"";
+            data[i][1] = pdto.getCustomerId()+"";
+            data[i][2] = pdto.getPcode()+"";
+            data[i][3] = pdto.getQuantity()+"";
+            data[i][4] = pdto.getPrice()+"";
+            data[i][5] = pdto.getSellerId()+"";
+            data[i][6] = pdto.getDate()+"";
+        }
+        
+        modelPan.setDataVector(data, colPan);
+        tablePanmae.setModel(modelPan);
+    }
+
     class EventHander extends MouseAdapter implements ItemListener {
 
         @Override
         public void itemStateChanged(ItemEvent e) {
             if (e.getSource() == cbSearch) {
+                tfSearch1.requestFocus();
+                tfSearch2.requestFocus();
                 String item = (String) cbSearch.getSelectedItem();
                 if (item.equals("가격")) {
                     tfSearch2.setEditable(true);
@@ -455,16 +539,24 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
 
                 String[] data = new String[colSel.length];
                 try {
-                    ProductDTO dto = dao.selectBycode(str);
+                    list = dao.selectBycode(str);
+                    ProductDTO dto = list.get(0);
+                    
+                    panmaeList.add(dto);
+                    
                     data[0] = dto.getPcode() + "";
                     data[1] = dto.getPname();
                     data[2] = dto.getPrice() + "";
                     data[3] = 1 + "";
+                    
                     modelSel.addRow(data);
                     tableSel.setModel(modelSel);
+                    
                     sum += dto.getPrice();
                     tfTotal.setText(sum + "");
+                    
                     ++count;
+                    System.out.println("row" + row + "count="+ count + ", sum=" + sum + ", dto="+dto);
 
                 } catch (SQLException ex) {
                     ex.printStackTrace();
@@ -476,8 +568,8 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == btSearch) {
-
+        if (e.getSource() == btSearchAll) {
+            searchAll();
         } else if (e.getSource() == btLogout) {
             int n = JOptionPane.showConfirmDialog(this, "로그아웃 하시겠습니까?", "Logout", JOptionPane.YES_NO_OPTION);
             if (n == JOptionPane.YES_OPTION) {
@@ -485,60 +577,79 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
                 l.setVisible(true);
                 dispose();
             }
+            
         } else if (e.getSource() == btProduct) {
             ProductGUI p = new ProductGUI();
             p.setVisible(true);
+            
         } else if (e.getSource() == btCustomer) {
             CustomerGUI c = new CustomerGUI();
             c.setVisible(true);
+            
         } else if (e.getSource() == btAccount) {
             AccountGUI a = new AccountGUI();
             a.setVisible(true);
+            
         } else if (e.getSource() == btCancle) {
             modelSel = new DefaultTableModel(colSel, 0);
             tableSel.setModel(modelSel);
             sum = 0;
             tfTotal.setText(sum + "");
+            panmaeList = new ArrayList<>();
+            
         } else if (e.getSource() == btDelete) {
-            int row = tableSel.getSelectedRow();
-            String price = (String) tableSel.getValueAt(row, 2);
-            if (row == -1) {
-                JOptionPane.showMessageDialog(this, "삭제할 행을 선택해야 합니다.");
-                return;
-            }
-            modelSel.removeRow(row);
-            tableSel.setModel(modelSel);
-            sum -= Integer.parseInt(price);
-            tfTotal.setText(sum + "");
+            delete();
+            
         } else if (e.getSource() == btSearch) {
-            String item = (String) cbSearch.getSelectedItem();
-            String val1 = tfSearch1.getText();
-            String val2 = tfSearch2.getText();
-
-            if (val1 == null || val1.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "찾을 값을 입력하셔야 합니다.");
-                tfSearch1.requestFocus();
-                return;
-            }
-
-            if (item.equals("가격")) {
-
-                if (val2 == null || val2.isEmpty()) {
-                    JOptionPane.showMessageDialog(this, "범위를 입력하셔야 합니다.");
-                    tfSearch2.requestFocus();
-                    return;
-                }
-                dao.selectByPrice(Integer.parseInt(val1), Integer.parseInt(val2));
-
-            } else if (item.equals("상품명")) {
-                dao.selectByName(val1);
-            } else {
-                try {
-                    dao.selectBycode(val1);
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
-                }
-            }
+            search();
+           
+        } else if(e.getSource() == btPayment){
+            payment();
         }
+    }
+
+    private void searchPrice(int val1, int val2) throws SQLException {
+        list = dao.selectByPrice(val1, val2);
+        String[][] data = new String[list.size()][colList.length];
+        for (int i = 0; i < list.size(); i++) {
+            ProductDTO dto = list.get(i);
+
+            data[i][0] = dto.getPcode();
+            data[i][1] = dto.getPname() + "";
+            data[i][2] = dto.getPrice() + "";
+            data[i][3] = dto.getStock() + "";
+        }
+        modelList.setDataVector(data, colList);
+        tableList.setModel(modelList);
+    }
+    
+     private void searchName(String val1) throws SQLException {
+        list = dao.selectByName(val1);
+        String[][] data = new String[list.size()][colList.length];
+        for (int i = 0; i < list.size(); i++) {
+            ProductDTO dto = list.get(i);
+
+            data[i][0] = dto.getPcode();
+            data[i][1] = dto.getPname() + "";
+            data[i][2] = dto.getPrice() + "";
+            data[i][3] = dto.getStock() + "";
+        }
+        modelList.setDataVector(data, colList);
+        tableList.setModel(modelList);
+    }
+     
+      private void searchCode(String val1) throws SQLException {
+        
+        list =  dao.selectBycode(val1);
+        String[][] data = new String[list.size()][colList.length];
+        for (int i = 0; i < list.size(); i++) {
+            ProductDTO dto = list.get(i);
+            data[i][0] = dto.getPcode();
+            data[i][1] = dto.getPname() + "";
+            data[i][2] = dto.getPrice() + "";
+            data[i][3] = dto.getStock() + "";
+        }
+        modelList.setDataVector(data, colList);
+        tableList.setModel(modelList);
     }
 }

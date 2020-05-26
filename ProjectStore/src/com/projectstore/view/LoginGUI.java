@@ -191,12 +191,13 @@ public class LoginGUI extends javax.swing.JFrame implements ActionListener{
     // End of variables declaration//GEN-END:variables
 
     private void init() {
-        setLocation(610, 100);
+       setLocationRelativeTo(null);
     }
 
     private void addEvent() {
         btLogin.addActionListener(this);
         btClose.addActionListener(this);
+        tfPwd.addActionListener(this);
     }
 
     @Override
@@ -213,6 +214,12 @@ public class LoginGUI extends javax.swing.JFrame implements ActionListener{
                                 JOptionPane.YES_NO_OPTION);
             if(n == JOptionPane.YES_OPTION){
                 System.exit(0);
+            }
+        }else if(e.getSource() == tfPwd){
+            try {
+                login();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
             }
         }
     }

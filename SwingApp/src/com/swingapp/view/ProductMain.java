@@ -50,7 +50,6 @@ public class ProductMain extends javax.swing.JFrame implements ItemListener{
         this.userId=userId;
 
         tfId.setText(userId);
-           
     }
     /**
      * This method is called from within the constructor to initialize the form.
