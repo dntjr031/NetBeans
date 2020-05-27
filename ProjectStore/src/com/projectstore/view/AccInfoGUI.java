@@ -7,7 +7,6 @@ package com.projectstore.view;
 
 import com.model.account.AccDAO;
 import com.model.account.AccDTO;
-import com.sun.org.apache.bcel.internal.generic.AALOAD;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;

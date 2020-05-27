@@ -417,7 +417,7 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
         btSearchAll.addActionListener(this);
     }
 
-    private void searchAll() {
+    public void searchAll() {
         try {
             list = dao.searchAll();
             String[][] data = new String[list.size()][colList.length];

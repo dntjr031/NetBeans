@@ -239,7 +239,7 @@ public class PanmaeGUI extends javax.swing.JFrame implements ActionListener{
 
     private void init() {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        
+        tfCustomerId.requestFocus();
         setLocationRelativeTo(null);
         
     }
@@ -314,5 +314,6 @@ public class PanmaeGUI extends javax.swing.JFrame implements ActionListener{
             System.out.println("처리된 결과 insertN=" + insertN + ", panmaeN=" + panmaeN);
         }
         sm.panListReset();
+        sm.searchAll();
     }
 }

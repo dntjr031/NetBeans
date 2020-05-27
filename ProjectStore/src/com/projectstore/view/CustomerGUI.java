@@ -58,26 +58,20 @@ public class CustomerGUI extends javax.swing.JFrame implements ActionListener{
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+
             }
         ));
         jScrollPane1.setViewportView(jTable1);
 
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+
             }
         ));
         jScrollPane2.setViewportView(jTable2);
@@ -268,7 +262,7 @@ public class CustomerGUI extends javax.swing.JFrame implements ActionListener{
         if(e.getSource() == btClose){
             dispose();
         }else if(e.getSource() == btInsert){
-            CustomerInsertGUI ci = new CustomerInsertGUI(this);
+            CustomerInsertGUI ci = new CustomerInsertGUI();
             ci.setVisible(true);
         }else if(e.getSource() == btUpdate){
             CustomerInsertGUI ci = new CustomerInsertGUI(userId, UPDATE);

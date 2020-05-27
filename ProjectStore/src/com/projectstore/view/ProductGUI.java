@@ -1,8 +1,8 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+* To change this license header, choose License Headers in Project Properties.
+* To change this template file, choose Tools | Templates
+* and open the template in the editor.
+*/
 package com.projectstore.view;
 
 import com.model.item.ItemDAO;
@@ -28,13 +28,14 @@ import javax.swing.table.DefaultTableModel;
  * @author STU-03
  */
 public class ProductGUI extends javax.swing.JFrame implements ActionListener {
-
-    private DefaultTableModel productModel;
+    
+    private DefaultTableModel productModel = new DefaultTableModel();
     private ProductDAO daoPro = new ProductDAO();
     private ProMgrDAO daoMgr = new ProMgrDAO();
     private ArrayList<ProductDTO> list = new ArrayList<>();
     private StoreMainGUI sm = null;
-
+    private String[] colList = {"상품코드", "상품이름", "상품가격", "재고"};
+    
     /**
      * Creates new form ProductGUI
      */
@@ -43,15 +44,12 @@ public class ProductGUI extends javax.swing.JFrame implements ActionListener {
         init();
         addEvent();
     }
-
+    
     ProductGUI(StoreMainGUI aThis) {
         this();
         this.sm = aThis;
-        productModel = aThis.getModelList();
-        table.setModel(productModel);
-
     }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -134,7 +132,7 @@ public class ProductGUI extends javax.swing.JFrame implements ActionListener {
         plLayout.setHorizontalGroup(
             plLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(plLayout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(plLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(plLayout.createSequentialGroup()
                         .addGap(31, 31, 31)
@@ -147,11 +145,11 @@ public class ProductGUI extends javax.swing.JFrame implements ActionListener {
                         .addComponent(tfAccCode, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btAccSearch))
-                    .addGroup(plLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(plLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, plLayout.createSequentialGroup()
                             .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(18, 18, 18)
-                            .addComponent(tfInPrice1))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(tfInPrice1, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(plLayout.createSequentialGroup()
                             .addGroup(plLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(jLabel6)
@@ -159,15 +157,14 @@ public class ProductGUI extends javax.swing.JFrame implements ActionListener {
                                 .addComponent(jLabel2)
                                 .addComponent(jLabel4)
                                 .addComponent(jLabel1))
-                            .addGap(32, 32, 32)
+                            .addGap(30, 30, 30)
                             .addGroup(plLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addGroup(plLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(tfSelPrice, javax.swing.GroupLayout.DEFAULT_SIZE, 146, Short.MAX_VALUE)
                                     .addComponent(tfquantity)
                                     .addComponent(tfPname)
                                     .addComponent(tfCode))
-                                .addComponent(cbItemCode, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(9, Short.MAX_VALUE))
+                                .addComponent(cbItemCode, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))))))
         );
         plLayout.setVerticalGroup(
             plLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -201,7 +198,7 @@ public class ProductGUI extends javax.swing.JFrame implements ActionListener {
                     .addComponent(tfAccCode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5)
                     .addComponent(btAccSearch))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
                 .addGroup(plLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btCancle)
                     .addComponent(btInsert))
@@ -215,17 +212,16 @@ public class ProductGUI extends javax.swing.JFrame implements ActionListener {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(scroll, javax.swing.GroupLayout.PREFERRED_SIZE, 463, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(pl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(5, 5, 5))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
+                        .addGap(12, 12, 12)
                         .addComponent(btDelete)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btClose)
-                        .addGap(19, 19, 19))))
+                        .addGap(125, 125, 125)
+                        .addComponent(btClose))
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(pl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(5, 5, 5))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -239,12 +235,12 @@ public class ProductGUI extends javax.swing.JFrame implements ActionListener {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btDelete)
                             .addComponent(btClose))
-                        .addGap(0, 8, Short.MAX_VALUE))))
+                        .addGap(0, 7, Short.MAX_VALUE))))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    
     /**
      * @param args the command line arguments
      */
@@ -252,8 +248,8 @@ public class ProductGUI extends javax.swing.JFrame implements ActionListener {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
+        * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
+        */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -271,7 +267,7 @@ public class ProductGUI extends javax.swing.JFrame implements ActionListener {
             java.util.logging.Logger.getLogger(ProductGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-
+        
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -279,7 +275,7 @@ public class ProductGUI extends javax.swing.JFrame implements ActionListener {
             }
         });
     }
-
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btAccSearch;
     private javax.swing.JButton btCancle;
@@ -304,19 +300,20 @@ public class ProductGUI extends javax.swing.JFrame implements ActionListener {
     private javax.swing.JTextField tfSelPrice;
     private javax.swing.JTextField tfquantity;
     // End of variables declaration//GEN-END:variables
-
+    
     private void init() {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
-
+        
         try {
             comboItem();
+            selectAll();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-
+        
     }
-
+    
     private void addEvent() {
         btClose.addActionListener(this);
         btCancle.addActionListener(this);
@@ -330,9 +327,10 @@ public class ProductGUI extends javax.swing.JFrame implements ActionListener {
         });
         btInsert.addActionListener(this);
         btAccSearch.addActionListener(this);
+        btDelete.addActionListener(this);
     }
-
-    @Override// 이거 리셋되게 수정
+    
+    @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btClose) {
             dispose();
@@ -342,9 +340,6 @@ public class ProductGUI extends javax.swing.JFrame implements ActionListener {
             try {
                 insert();
                 tfClear();
-                sm.panListReset();
-                productModel = sm.getModelList();
-                table.setModel(productModel);
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
@@ -352,9 +347,19 @@ public class ProductGUI extends javax.swing.JFrame implements ActionListener {
         } else if (e.getSource() == btAccSearch) {
             AccInfoGUI in = new AccInfoGUI(this);
             in.setVisible(true);
+        }else if(e.getSource() == btDelete){
+            try {
+                productDelete();
+                sm.searchAll();
+                selectAll();
+                tableListWidth();
+                sm.panListReset();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
         }
     }
-
+    
     private void tfClear() {
         tfAccCode.setText("");
         tfPname.setText("");
@@ -363,26 +368,26 @@ public class ProductGUI extends javax.swing.JFrame implements ActionListener {
         cbItemCode.setSelectedItem("선택하세요");
         tfquantity.setText("");
         tfInPrice1.setText("");
-
+        
         tfPname.setEditable(true);
         tfCode.setEditable(true);
         tfSelPrice.setEditable(true);
         cbItemCode.setEditable(true);
         tfquantity.setEditable(true);
         tfInPrice1.setEditable(true);
-
+        
         btInsert.setEnabled(true);
         btDelete.setEnabled(false);
     }
-
+    
     private void setText() {
         int row = table.getSelectedRow();
         String str = (String) table.getValueAt(row, 0);
-
+        
         try {
             list = daoPro.selectBycode(str);
             ProductDTO dto = list.get(0);
-
+            
             tfCode.setText(dto.getPcode() + "");
             tfSelPrice.setText(dto.getPrice() + "");
             tfPname.setText(dto.getPname());
@@ -391,26 +396,26 @@ public class ProductGUI extends javax.swing.JFrame implements ActionListener {
             ItemDAO daoItem = new ItemDAO();
             ItemDTO dtoItem = daoItem.selectByCode(itemCode);
             cbItemCode.setSelectedItem(dtoItem.getName());
-
+            
             tfCode.setEditable(false);
             cbItemCode.setEditable(false);
             tfInPrice1.setEditable(true);
-
+            
             btInsert.setEnabled(true);
             btDelete.setEnabled(true);
-
+            
             System.out.println("row" + row + ", dto=" + dto);
-
+            
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
     }
-
+    
     private void insert() throws SQLException {
         String pcode = tfCode.getText();
         String accCode = tfAccCode.getText();
         String inprice = tfInPrice1.getText();
-
+        
         String itemName = (String) cbItemCode.getSelectedItem();
         System.out.println("itmeName=" + itemName);
         ItemDAO daoItem = new ItemDAO();
@@ -418,102 +423,142 @@ public class ProductGUI extends javax.swing.JFrame implements ActionListener {
         System.out.println("dto=" + dtoItem);
         String itemCode = dtoItem.getCode();
         System.out.println("itemcode=" + itemCode);
-
+        
         String pName = tfPname.getText();
         String selPrice = tfSelPrice.getText();
         String quantity = tfquantity.getText();
-
+        
         if (pcode == null || pcode.isEmpty()) {
             JOptionPane.showMessageDialog(this, "상품코드를 입력해야 합니다.");
             return;
         }
-
+        
         if (accCode == null || accCode.isEmpty()) {
             JOptionPane.showMessageDialog(this, "유통업체 코드를 입력해야 합니다.");
             return;
         }
-
+        
         if (inprice == null || inprice.isEmpty()) {
             JOptionPane.showMessageDialog(this, "입고금액을 입력해야 합니다.");
             return;
         }
-
+        
         if (itemCode == null || itemCode.isEmpty()) {
             JOptionPane.showMessageDialog(this, "품목코드를 입력해야 합니다.");
             return;
         }
-
+        
         if (pName == null || pName.isEmpty()) {
             JOptionPane.showMessageDialog(this, "상품명을 입력해야 합니다.");
             return;
         }
-
+        
         if (selPrice == null || selPrice.isEmpty()) {
             JOptionPane.showMessageDialog(this, "판매금액을 입력해야 합니다.");
             return;
         }
-
+        
         if (quantity == null || quantity.isEmpty()) {
             JOptionPane.showMessageDialog(this, "입고 개수를 입력해야 합니다.");
             return;
         }
-
+        
         ProductDTO dtoPro = new ProductDTO();
         dtoPro.setItem_code(itemCode);
         dtoPro.setPcode(pcode);
         dtoPro.setPname(pName);
         dtoPro.setPrice(Integer.parseInt(selPrice));
         dtoPro.setStock(Integer.parseInt(quantity));
-
+        
         ProMgrDTO dtoMgr = new ProMgrDTO();
         dtoMgr.setAccCode(accCode);
         dtoMgr.setPcode(pcode);
         dtoMgr.setPrice(Integer.parseInt(inprice));
         dtoMgr.setQuantity(Integer.parseInt(quantity));
         dtoMgr.setTotalPrice(Integer.parseInt(inprice) * Integer.parseInt(quantity));
-
+        
         boolean check = daoPro.codeCheck(pcode);
-
+        
         if (check == ProductDAO.INSERT) {
             productInsert(dtoMgr, dtoPro);
         } else {
             productStockUpdate(dtoMgr, dtoPro);
         }
+        
+        sm.searchAll();
+        selectAll();
+        tableListWidth();
     }
-
+    
     private void productInsert(ProMgrDTO dtoMgr, ProductDTO dtoPro) throws SQLException {
         int n1 = daoPro.insert(dtoPro);
         int n2 = daoMgr.insert(dtoMgr);
-
+        
         System.out.println("n1=" + n1 + ",n2" + n2);
-
+        
         if (n1 > 0 && n2 > 0) {
             JOptionPane.showMessageDialog(this, "입고완료!");
         } else {
             JOptionPane.showMessageDialog(this, "입고실패!");
         }
     }
-
+    
     private void productStockUpdate(ProMgrDTO dtoMgr, ProductDTO dtoPro) throws SQLException {
         int n1 = daoPro.stockUpdate(dtoPro);
         int n2 = daoMgr.insert(dtoMgr);
-
+        
         System.out.println("n1=" + n1 + ",n2" + n2);
-
+        
         if (n1 > 0 && n2 > 0) {
             JOptionPane.showMessageDialog(this, "입고완료!");
         } else {
             JOptionPane.showMessageDialog(this, "입고실패!");
         }
     }
-
+    
     private void comboItem() throws SQLException {
         ItemDAO daoitem = new ItemDAO();
-        ArrayList<ItemDTO> list = daoitem.selectAll();
-        for (int i = 0; i < list.size(); i++) {
-            System.out.println(list.get(i).getName());
-            cbItemCode.addItem(list.get(i).getName());
+        ArrayList<ItemDTO> itemList;
+        itemList = daoitem.selectAll();
+        for (int i = 0; i < itemList.size(); i++) {
+            System.out.println(itemList.get(i).getName());
+            cbItemCode.addItem(itemList.get(i).getName());
         }
     }
+    
+    private void selectAll() throws SQLException {
+        
+        list = daoPro.searchAll();
+        String[][] data = new String[list.size()][colList.length];
+        for (int i = 0; i < list.size(); i++) {
+            ProductDTO dto = list.get(i);
+            
+            data[i][0] = dto.getPcode();
+            data[i][1] = dto.getPname() + "";
+            data[i][2] = dto.getPrice() + "";
+            data[i][3] = dto.getStock() + "";
+        }
+        productModel.setDataVector(data, colList);
+        table.setModel(productModel);
+        tableListWidth();
+        
+    }
+    
+    private void tableListWidth() {
+        table.getColumnModel().getColumn(0).setPreferredWidth(10);
+        table.getColumnModel().getColumn(2).setPreferredWidth(20);
+        table.getColumnModel().getColumn(3).setPreferredWidth(10);
+    }
 
+    private void productDelete() throws SQLException {
+        String pcode = tfCode.getText();
+        if(pcode == null || pcode.isEmpty()){
+            JOptionPane.showMessageDialog(this, "삭제할 상품을 클릭해야 합니다.");
+            return;
+        }
+        
+        int n = daoPro.deleteByPcode(pcode);
+        System.out.println("n="+n);
+        JOptionPane.showMessageDialog(this, "삭제완료");
+    }
 }
