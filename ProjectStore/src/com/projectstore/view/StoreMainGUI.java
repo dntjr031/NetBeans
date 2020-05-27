@@ -32,7 +32,7 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
     private ProductDAO dao = new ProductDAO();
     private String[] colList = {"상품코드", "상품이름", "상품가격", "재고"};
     private String[] colSel = {"상품코드", "상품이름", "상품가격", "개수"};
-    private String[] colPan = {"번호", "고객아이디", "상품코드", "개수","가격","판매원 아이디","거래날짜"};
+    private String[] colPan = {"번호", "고객아이디", "상품코드", "개수", "가격", "판매원 아이디", "거래날짜"};
     private DefaultTableModel modelList = new DefaultTableModel();
     private DefaultTableModel modelSel = new DefaultTableModel();
     private DefaultTableModel modelPan = new DefaultTableModel();
@@ -41,6 +41,16 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
     private ArrayList<ProductDTO> list;
     private static ArrayList<ProductDTO> panmaeList;
 
+    public DefaultTableModel getModelList() {
+        return modelList;
+    }
+
+    public DefaultTableModel getModelSel() {
+        return modelSel;
+    }
+
+    
+    
     /**
      * Creates new form StoreMain
      */
@@ -54,7 +64,7 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
         this();
         selId = id;
         tfUserId.setText(id);
-        
+
     }
 
     /**
@@ -381,13 +391,14 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
     private void init() {
         panmaeList = new ArrayList<>();
         panListReset();
-        
+
         setLocationRelativeTo(null);
         searchAll();
         modelSel.addColumn("상품코드");
         modelSel.addColumn("상품이름");
         modelSel.addColumn("상품가격");
         modelSel.addColumn("개수");
+        tableListWidth();
         tfTotal.setText(sum + "");
 
     }
@@ -420,6 +431,7 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
             }
             modelList.setDataVector(data, colList);
             tableList.setModel(modelList);
+            tableListWidth();
 
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -428,67 +440,67 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
 
     private void delete() {
         int row = 0;
-            try {
-                row = tableSel.getSelectedRow();
-                if (row == -1) {
-                    throw new IndexOutOfBoundsException();
-                }
-            } catch (IndexOutOfBoundsException ex) {
-                ex.printStackTrace();
-                JOptionPane.showMessageDialog(this, "삭제할 행을 선택해야 합니다.");
-                return;
+        try {
+            row = tableSel.getSelectedRow();
+            if (row == -1) {
+                throw new IndexOutOfBoundsException();
             }
-            String price = (String) tableSel.getValueAt(row, 2);
+        } catch (IndexOutOfBoundsException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "삭제할 행을 선택해야 합니다.");
+            return;
+        }
+        String price = (String) tableSel.getValueAt(row, 2);
 
-            modelSel.removeRow(row);
-            tableSel.setModel(modelSel);
-            sum -= Integer.parseInt(price);
-            tfTotal.setText(sum + "");
-            panmaeList.remove(row);
-            System.out.println("row="+row);
+        modelSel.removeRow(row);
+        tableSel.setModel(modelSel);
+        sum -= Integer.parseInt(price);
+        tfTotal.setText(sum + "");
+        panmaeList.remove(row);
+        System.out.println("row=" + row);
     }
 
     private void search() {
-         String item = (String) cbSearch.getSelectedItem();
-            String val1 = tfSearch1.getText();
-            String val2 = tfSearch2.getText();
-            System.out.println("item=" + item + ", val1=" + val1 + ", val2=" + val2);
-            if (val1 == null || val1.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "찾을 값을 입력하셔야 합니다.");
-                tfSearch1.requestFocus();
-                return;
-            }
+        String item = (String) cbSearch.getSelectedItem();
+        String val1 = tfSearch1.getText();
+        String val2 = tfSearch2.getText();
+        System.out.println("item=" + item + ", val1=" + val1 + ", val2=" + val2);
+        if (val1 == null || val1.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "찾을 값을 입력하셔야 합니다.");
+            tfSearch1.requestFocus();
+            return;
+        }
 
-            try {
-                if (item.equals("가격")) {
-                    if (val2 == null || val2.isEmpty()) {
-                        JOptionPane.showMessageDialog(this, "범위를 입력하셔야 합니다.");
-                        tfSearch2.requestFocus();
-                        return;
-                    }
-                    searchPrice(Integer.parseInt(val1), Integer.parseInt(val2));
-                } else if (item.equals("상품명")) {
-                    searchName(val1);
-                } else {
-                    searchCode(val1);
+        try {
+            if (item.equals("가격")) {
+                if (val2 == null || val2.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "범위를 입력하셔야 합니다.");
+                    tfSearch2.requestFocus();
+                    return;
                 }
-            } catch (SQLException ex) {
-                ex.printStackTrace();
+                searchPrice(Integer.parseInt(val1), Integer.parseInt(val2));
+            } else if (item.equals("상품명")) {
+                searchName(val1);
+            } else {
+                searchCode(val1);
             }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
     }
 
     private void payment() {
-        if(panmaeList == null || panmaeList.isEmpty()){
+        if (panmaeList == null || panmaeList.isEmpty()) {
             JOptionPane.showMessageDialog(this, "선택된 상품이 없습니다.");
-            dispose();
+            return;
         }
-        if(selId == null || selId.isEmpty()){
+        if (selId == null || selId.isEmpty()) {
             JOptionPane.showMessageDialog(this, "선택된 상품이 없습니다.");
-            dispose();
+            return;
         }
-        if(sum == 0){
+        if (sum == 0) {
             JOptionPane.showMessageDialog(this, "선택된 상품이 없습니다.");
-            dispose();
+            return;
         }
         
         PanmaeGUI p = new PanmaeGUI(selId, panmaeList, sum, this);
@@ -498,21 +510,45 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
     public void panListReset() {
         PanmaeDAO pdao = new PanmaeDAO();
         ArrayList<PanmaeDTO> listpan = pdao.searchAll();
-        
+
         String[][] data = new String[listpan.size()][colPan.length];
-        for (int i = 0; i < list.size(); i++) {
+        for (int i = 0; i < listpan.size(); i++) {
             PanmaeDTO pdto = listpan.get(i);
-            data[i][0] = pdto.getNo()+"";
-            data[i][1] = pdto.getCustomerId()+"";
-            data[i][2] = pdto.getPcode()+"";
-            data[i][3] = pdto.getQuantity()+"";
-            data[i][4] = pdto.getPrice()+"";
-            data[i][5] = pdto.getSellerId()+"";
-            data[i][6] = pdto.getDate()+"";
+            data[i][0] = pdto.getNo() + "";
+            data[i][1] = pdto.getCustomerId() + "";
+            data[i][2] = pdto.getPcode() + "";
+            data[i][3] = pdto.getQuantity() + "";
+            data[i][4] = pdto.getPrice() + "";
+            data[i][5] = pdto.getSellerId() + "";
+            data[i][6] = pdto.getDate() + "";
         }
-        
+
         modelPan.setDataVector(data, colPan);
         tablePanmae.setModel(modelPan);
+        tablePanmaeWidth();
+    }
+
+    private void tablePanmaeWidth() {
+        tablePanmae.getColumnModel().getColumn(0).setPreferredWidth(10);
+        tablePanmae.getColumnModel().getColumn(1).setPreferredWidth(20);
+        tablePanmae.getColumnModel().getColumn(2).setPreferredWidth(20);
+        tablePanmae.getColumnModel().getColumn(3).setPreferredWidth(10);
+        tablePanmae.getColumnModel().getColumn(4).setPreferredWidth(40);
+        tablePanmae.getColumnModel().getColumn(5).setPreferredWidth(40);
+    }
+
+    private void tableListWidth() {
+        tableList.getColumnModel().getColumn(0).setPreferredWidth(10);
+        tableList.getColumnModel().getColumn(2).setPreferredWidth(20);
+        tableList.getColumnModel().getColumn(3).setPreferredWidth(10);
+    }
+
+    public void tablePanmaeClear() {
+        modelSel = new DefaultTableModel(colSel, 0);
+        tableSel.setModel(modelSel);
+        sum = 0;
+        tfTotal.setText(sum + "");
+        panmaeList = new ArrayList<>();
     }
 
     class EventHander extends MouseAdapter implements ItemListener {
@@ -521,7 +557,8 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
         public void itemStateChanged(ItemEvent e) {
             if (e.getSource() == cbSearch) {
                 tfSearch1.requestFocus();
-                tfSearch2.requestFocus();
+                tfSearch1.setText("");
+                tfSearch2.setText("");
                 String item = (String) cbSearch.getSelectedItem();
                 if (item.equals("가격")) {
                     tfSearch2.setEditable(true);
@@ -536,27 +573,33 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
             if (e.getSource() == tableList) {
                 int row = tableList.getSelectedRow();
                 String str = (String) tableList.getValueAt(row, 0);
+                String stock = (String) tableList.getValueAt(row, 3);
+                
+                if(stock == null || stock.equals("0") || stock.isEmpty()){
+                    JOptionPane.showMessageDialog(StoreMainGUI.this, "재고가 없습니다.");
+                    return;
+                }
 
                 String[] data = new String[colSel.length];
                 try {
                     list = dao.selectBycode(str);
                     ProductDTO dto = list.get(0);
-                    
+
                     panmaeList.add(dto);
-                    
+
                     data[0] = dto.getPcode() + "";
                     data[1] = dto.getPname();
                     data[2] = dto.getPrice() + "";
                     data[3] = 1 + "";
-                    
+
                     modelSel.addRow(data);
                     tableSel.setModel(modelSel);
-                    
+
                     sum += dto.getPrice();
                     tfTotal.setText(sum + "");
-                    
+
                     ++count;
-                    System.out.println("row" + row + "count="+ count + ", sum=" + sum + ", dto="+dto);
+                    System.out.println("row" + row + "count=" + count + ", sum=" + sum + ", dto=" + dto);
 
                 } catch (SQLException ex) {
                     ex.printStackTrace();
@@ -570,6 +613,8 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btSearchAll) {
             searchAll();
+            tfSearch1.setText("");
+            tfSearch2.setText("");
         } else if (e.getSource() == btLogout) {
             int n = JOptionPane.showConfirmDialog(this, "로그아웃 하시겠습니까?", "Logout", JOptionPane.YES_NO_OPTION);
             if (n == JOptionPane.YES_OPTION) {
@@ -577,33 +622,31 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
                 l.setVisible(true);
                 dispose();
             }
-            
+
         } else if (e.getSource() == btProduct) {
-            ProductGUI p = new ProductGUI();
+            ProductGUI p = new ProductGUI(this);
             p.setVisible(true);
-            
+
         } else if (e.getSource() == btCustomer) {
             CustomerGUI c = new CustomerGUI();
             c.setVisible(true);
-            
+
         } else if (e.getSource() == btAccount) {
             AccountGUI a = new AccountGUI();
             a.setVisible(true);
-            
+
         } else if (e.getSource() == btCancle) {
-            modelSel = new DefaultTableModel(colSel, 0);
-            tableSel.setModel(modelSel);
-            sum = 0;
-            tfTotal.setText(sum + "");
-            panmaeList = new ArrayList<>();
-            
+            tablePanmaeClear();
+
         } else if (e.getSource() == btDelete) {
             delete();
-            
+
         } else if (e.getSource() == btSearch) {
             search();
-           
-        } else if(e.getSource() == btPayment){
+            tfSearch1.setText("");
+            tfSearch2.setText("");
+            tableListWidth();
+        } else if (e.getSource() == btPayment) {
             payment();
         }
     }
@@ -622,8 +665,8 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
         modelList.setDataVector(data, colList);
         tableList.setModel(modelList);
     }
-    
-     private void searchName(String val1) throws SQLException {
+
+    private void searchName(String val1) throws SQLException {
         list = dao.selectByName(val1);
         String[][] data = new String[list.size()][colList.length];
         for (int i = 0; i < list.size(); i++) {
@@ -637,10 +680,10 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
         modelList.setDataVector(data, colList);
         tableList.setModel(modelList);
     }
-     
-      private void searchCode(String val1) throws SQLException {
-        
-        list =  dao.selectBycode(val1);
+
+    private void searchCode(String val1) throws SQLException {
+
+        list = dao.selectBycode(val1);
         String[][] data = new String[list.size()][colList.length];
         for (int i = 0; i < list.size(); i++) {
             ProductDTO dto = list.get(i);

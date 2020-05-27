@@ -8,6 +8,7 @@ package com.projectstore.view;
 import com.model.customer.CustomerDAO;
 import com.model.panmae.PanmaeDAO;
 import com.model.panmae.PanmaeDTO;
+import com.model.product.ProductDAO;
 import com.model.product.ProductDTO;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -30,8 +31,11 @@ public class PanmaeGUI extends javax.swing.JFrame implements ActionListener{
     private ArrayList<ProductDTO> panmaeList;
     private DefaultTableModel model;
     private String[] colSel = {"상품코드", "상품이름", "상품가격", "개수"};
+    
     private CustomerDAO daoCustomer = new CustomerDAO();
     private PanmaeDAO daoPanmae = new PanmaeDAO();
+    private ProductDAO daoProduct = new ProductDAO();
+    
     private boolean check = false;
     private StoreMainGUI sm = null;
     
@@ -260,6 +264,8 @@ public class PanmaeGUI extends javax.swing.JFrame implements ActionListener{
         }else if(e.getSource() == btSubmit){
             try {
                 Submit();
+                dispose();
+                sm.tablePanmaeClear();
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
@@ -302,8 +308,10 @@ public class PanmaeGUI extends javax.swing.JFrame implements ActionListener{
             dtoPan.setQuantity(1);
             dtoPan.setSellerId(tfsSelId.getText());
             
-            int n = daoPanmae.insertPanmae(dtoPan);
-            System.out.println("처리된 결과 n=" + n);
+            int insertN = daoPanmae.insertPanmae(dtoPan);
+            
+            int panmaeN = daoProduct.panmae(dtoPan.getPcode());
+            System.out.println("처리된 결과 insertN=" + insertN + ", panmaeN=" + panmaeN);
         }
         sm.panListReset();
     }
