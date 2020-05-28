@@ -5,18 +5,46 @@
  */
 package com.projectstore.view;
 
+import com.model.customer.CustomerDAO;
+import com.model.customer.CustomerDTO;
+import com.model.panmae.PanmaeDAO;
+import com.model.panmae.PanmaeDTO;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author STU-03
  */
-public class CustomerGUI extends javax.swing.JFrame implements ActionListener{
-    
+public class CustomerGUI extends javax.swing.JFrame implements ActionListener {
+
     private String userId;
-    private final boolean UPDATE=true, DETAIL=false;
+    private final boolean UPDATE = true, DETAIL = false;
+    private CustomerDAO daoCustomer = new CustomerDAO();
+    private ArrayList<CustomerDTO> listCustomer;
+    private ArrayList<PanmaeDTO> listPanmae;
+    private PanmaeDAO daoPanmae = new PanmaeDAO();
+    private String[] colCustomer = {"아이디", "이름", "핸드폰번호", "생년월일", "성별", "우편번호", "주소", "상세주소"};
+    private String[] colPan = {"번호", "고객아이디", "상품코드", "개수", "가격", "판매원 아이디", "거래날짜"};
+    private DefaultTableModel modelCustomer = new DefaultTableModel();
+    private DefaultTableModel modelPanmae = new DefaultTableModel();
+
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+    private int totalPrice = 0;
+
     /**
      * Creates new form CustomerGUI
      */
@@ -36,14 +64,15 @@ public class CustomerGUI extends javax.swing.JFrame implements ActionListener{
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tableCustomer = new javax.swing.JTable();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        tablePanmae = new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        tfName = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        tfTotalPrice = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
         btInsert = new javax.swing.JButton();
         btDetail = new javax.swing.JButton();
         btUpdate = new javax.swing.JButton();
@@ -52,11 +81,13 @@ public class CustomerGUI extends javax.swing.JFrame implements ActionListener{
         btSearch = new javax.swing.JButton();
         btDelete = new javax.swing.JButton();
         btClose = new javax.swing.JButton();
+        btSelectAll = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("고객관리");
         setResizable(false);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tableCustomer.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -64,9 +95,9 @@ public class CustomerGUI extends javax.swing.JFrame implements ActionListener{
 
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tableCustomer);
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        tablePanmae.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -74,45 +105,49 @@ public class CustomerGUI extends javax.swing.JFrame implements ActionListener{
 
             }
         ));
-        jScrollPane2.setViewportView(jTable2);
+        jScrollPane2.setViewportView(tablePanmae);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         jLabel1.setText("이름 : ");
 
-        jTextField1.setEditable(false);
+        tfName.setEditable(false);
 
         jLabel2.setText("총 거래금액 :");
 
-        jTextField2.setEditable(false);
+        tfTotalPrice.setEditable(false);
+        tfTotalPrice.setText("0");
+
+        jLabel4.setText("원");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(12, 12, 12)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel1))
+                .addGap(51, 51, 51)
+                .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 135, Short.MAX_VALUE)
-                    .addComponent(jTextField2))
-                .addContainerGap(26, Short.MAX_VALUE))
+                .addComponent(tfName, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(209, 209, 209)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tfTotalPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel4)
+                .addContainerGap(60, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(13, 13, 13)
+                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
-                .addContainerGap(18, Short.MAX_VALUE))
+                    .addComponent(tfName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tfTotalPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel4))
+                .addContainerGap(13, Short.MAX_VALUE))
         );
 
         btInsert.setText("고객등록");
@@ -129,62 +164,69 @@ public class CustomerGUI extends javax.swing.JFrame implements ActionListener{
 
         btClose.setText("닫기");
 
+        btSelectAll.setText("전체 조회");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(btInsert)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btDetail)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btUpdate)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btDelete))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
+                    .addComponent(jScrollPane1)
+                    .addComponent(jScrollPane2)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
+                                .addComponent(btInsert)
+                                .addGap(30, 30, 30)
+                                .addComponent(btDetail)
+                                .addGap(37, 37, 37)
+                                .addComponent(btUpdate)
+                                .addGap(32, 32, 32)
+                                .addComponent(btDelete)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btClose, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btSelectAll, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jLabel3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(tfSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(tfSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btSearch))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 426, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(btClose, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(btSearch)))
+                        .addGap(12, 12, 12)))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btInsert, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btDetail, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 337, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btClose, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btInsert, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btDetail, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btSelectAll)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 337, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(tfSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btSearch))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tfSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btSearch)
-                    .addComponent(jLabel3)
-                    .addComponent(btClose))
-                .addGap(15, 15, 15))
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(5, 5, 5))
         );
 
         pack();
@@ -231,18 +273,20 @@ public class CustomerGUI extends javax.swing.JFrame implements ActionListener{
     private javax.swing.JButton btDetail;
     private javax.swing.JButton btInsert;
     private javax.swing.JButton btSearch;
+    private javax.swing.JButton btSelectAll;
     private javax.swing.JButton btUpdate;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable2;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
+    private javax.swing.JTable tableCustomer;
+    private javax.swing.JTable tablePanmae;
+    private javax.swing.JTextField tfName;
     private javax.swing.JTextField tfSearch;
+    private javax.swing.JTextField tfTotalPrice;
     // End of variables declaration//GEN-END:variables
 
     private void addEvent() {
@@ -250,26 +294,218 @@ public class CustomerGUI extends javax.swing.JFrame implements ActionListener{
         btInsert.addActionListener(this);
         btUpdate.addActionListener(this);
         btDetail.addActionListener(this);
+        btSelectAll.addActionListener(this);
+        tableCustomer.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getSource() == tableCustomer) {
+                    int row = tableCustomer.getSelectedRow();
+                    String customerId = (String) tableCustomer.getValueAt(row, 0);
+                    try {
+                        panmaeSelectById(customerId);
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                    tfName.setText((String) tableCustomer.getValueAt(row, 1));
+                }
+            }
+        });
+        btSearch.addActionListener(this);
+        btDelete.addActionListener(this);
     }
 
     private void init() {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
+
+        customerSelectAll();
+        panmaeSelectAll();
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == btClose){
+        if (e.getSource() == btClose) {
             dispose();
-        }else if(e.getSource() == btInsert){
-            CustomerInsertGUI ci = new CustomerInsertGUI();
+        } else if (e.getSource() == btInsert) {
+            CustomerInsertGUI ci = new CustomerInsertGUI(this);
             ci.setVisible(true);
-        }else if(e.getSource() == btUpdate){
-            CustomerInsertGUI ci = new CustomerInsertGUI(userId, UPDATE);
+        } else if (e.getSource() == btUpdate) {
+            int row = tableCustomer.getSelectedRow();
+            if (row == -1) {
+                JOptionPane.showMessageDialog(this, "정보를 볼 고객을 선택해야 합니다.");
+                return;
+            }
+            String id = (String) tableCustomer.getValueAt(row, 0);
+            CustomerInsertGUI ci = new CustomerInsertGUI(id, UPDATE, this);
             ci.setVisible(true);
-        }else if(e.getSource() == btDetail){
-            CustomerInsertGUI ci = new CustomerInsertGUI(userId, DETAIL);
+        } else if (e.getSource() == btDetail) {
+            int row = tableCustomer.getSelectedRow();
+            if (row == -1) {
+                JOptionPane.showMessageDialog(this, "정보를 볼 고객을 선택해야 합니다.");
+                return;
+            }
+            String id = (String) tableCustomer.getValueAt(row, 0);
+            CustomerInsertGUI ci = new CustomerInsertGUI(id, DETAIL, this);
             ci.setVisible(true);
+        } else if (e.getSource() == btSelectAll) {
+            customerSelectAll();
+            panmaeSelectAll();
+            textClear();
+        } else if (e.getSource() == btSearch) {
+            try {
+                customerSearchByName();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        } else if (e.getSource() == btDelete) {
+            try {
+                int n = JOptionPane.showConfirmDialog(this, "정말 삭제하시겠습니까?", "삭제", JOptionPane.YES_NO_OPTION);
+                
+                if(n == JOptionPane.YES_OPTION){
+                    customerDelete();
+                }
+                
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    public void customerSelectAll() {
+        try {
+            listCustomer = daoCustomer.selectAll();
+
+            String[][] data = new String[listCustomer.size()][colCustomer.length];
+            for (int i = 0; i < listCustomer.size(); i++) {
+                CustomerDTO dto = listCustomer.get(i);
+                data[i][0] = dto.getId();
+                data[i][1] = dto.getName();
+                data[i][2] = dto.getPh();
+                data[i][3] = dateFormat.format(new Date(dto.getBirthday().getTime()));
+                data[i][4] = dto.getGender();
+                data[i][5] = dto.getZipcode();
+                data[i][6] = dto.getAddress1();
+                data[i][7] = dto.getAddress2();
+            }
+            modelCustomer.setDataVector(data, colCustomer);
+            tableCustomer.setModel(modelCustomer);
+            customerWidth();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void customerWidth() {
+        tableCustomer.getColumnModel().getColumn(0).setPreferredWidth(10);
+        tableCustomer.getColumnModel().getColumn(1).setPreferredWidth(10);
+        tableCustomer.getColumnModel().getColumn(2).setPreferredWidth(40);
+        tableCustomer.getColumnModel().getColumn(3).setPreferredWidth(40);
+        tableCustomer.getColumnModel().getColumn(4).setPreferredWidth(10);
+        tableCustomer.getColumnModel().getColumn(5).setPreferredWidth(5);
+        tableCustomer.getColumnModel().getColumn(6).setPreferredWidth(60);
+        tableCustomer.getColumnModel().getColumn(7).setPreferredWidth(60);
+    }
+
+    public void panmaeSelectAll() {
+        listPanmae = daoPanmae.searchAll();
+
+        String[][] data = new String[listPanmae.size()][colPan.length];
+        for (int i = 0; i < listPanmae.size(); i++) {
+            PanmaeDTO dto = listPanmae.get(i);
+            data[i][0] = dto.getNo() + "";
+            data[i][1] = dto.getCustomerId() + "";
+            data[i][2] = dto.getPcode() + "";
+            data[i][3] = dto.getQuantity() + "";
+            data[i][4] = dto.getPrice() + "";
+            data[i][5] = dto.getSellerId() + "";
+            data[i][6] = dateFormat.format(new Date(dto.getDate().getTime()));
+        }
+        modelPanmae.setDataVector(data, colPan);
+        tablePanmae.setModel(modelPanmae);
+        panmaeWidth();
+    }
+
+    public void panmaeWidth() {
+        tablePanmae.getColumnModel().getColumn(0).setPreferredWidth(10);
+        tablePanmae.getColumnModel().getColumn(1).setPreferredWidth(20);
+        tablePanmae.getColumnModel().getColumn(2).setPreferredWidth(20);
+        tablePanmae.getColumnModel().getColumn(3).setPreferredWidth(10);
+        tablePanmae.getColumnModel().getColumn(4).setPreferredWidth(20);
+        tablePanmae.getColumnModel().getColumn(5).setPreferredWidth(20);
+    }
+
+    private void panmaeSelectById(String customerId) throws SQLException {
+        listPanmae = daoPanmae.searchById(customerId);
+        totalPrice = 0;
+
+        if (listPanmae == null || listPanmae.size() == 0 || listPanmae.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "판매내역이 없습니다.");
+            textClear();
+            return;
+        }
+
+        String[][] data = new String[listPanmae.size()][colPan.length];
+        for (int i = 0; i < listPanmae.size(); i++) {
+            PanmaeDTO dto = listPanmae.get(i);
+            data[i][0] = dto.getNo() + "";
+            data[i][1] = dto.getCustomerId();
+            data[i][2] = dto.getPcode();
+            data[i][3] = dto.getQuantity() + "";
+            data[i][4] = dto.getPrice() + "";
+            totalPrice += dto.getPrice();
+            data[i][5] = dto.getSellerId();
+            data[i][6] = dateFormat.format(new Date(dto.getDate().getTime()));
+        }
+        modelPanmae.setDataVector(data, colPan);
+        tablePanmae.setModel(modelPanmae);
+        panmaeWidth();
+        customerWidth();
+        tfTotalPrice.setText(totalPrice + "");
+    }
+
+    private void textClear() {
+        tfSearch.setText("");
+        tfName.setText("");
+        tfTotalPrice.setText("0");
+    }
+
+    private void customerSearchByName() throws SQLException {
+        String name = tfSearch.getText();
+        if (name == null || name.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "찾을 이름을 입력하셔야 합니다.");
+            tfSearch.requestFocus();
+            return;
+        }
+        listCustomer = daoCustomer.selectByName(name);
+
+        String[][] data = new String[listCustomer.size()][colCustomer.length];
+        for (int i = 0; i < listCustomer.size(); i++) {
+            CustomerDTO dto = listCustomer.get(i);
+            data[i][0] = dto.getId();
+            data[i][1] = dto.getName();
+            data[i][2] = dto.getPh();
+            data[i][3] = dateFormat.format(new Date(dto.getBirthday().getTime()));
+            data[i][4] = dto.getGender();
+            data[i][5] = dto.getZipcode();
+            data[i][6] = dto.getAddress1();
+            data[i][7] = dto.getAddress2();
+        }
+        modelCustomer.setDataVector(data, colCustomer);
+        tableCustomer.setModel(modelCustomer);
+        customerWidth();
+    }
+
+    private void customerDelete() throws SQLException {
+        int row = tableCustomer.getSelectedRow();
+        String customerId = (String) tableCustomer.getValueAt(row, 0);
+        int n = daoCustomer.delete(customerId);
+        
+        if(n>0){
+            JOptionPane.showMessageDialog(this, "삭제 완료!");
+            customerSelectAll();
+            panmaeSelectAll();
+        }else{
+            JOptionPane.showMessageDialog(this, "삭제 실패!");
         }
     }
 }

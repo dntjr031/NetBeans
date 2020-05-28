@@ -5,6 +5,8 @@
  */
 package com.model.customer;
 
+import java.sql.Timestamp;
+
 /**
  *
  * @author STU-03
@@ -14,7 +16,7 @@ public class CustomerDTO {
     private String id;
     private String name;
     private String ph;
-    private String birthday;
+    private Timestamp birthday;
     private String gender;
     private String zipcode;
     private String address1;
@@ -32,7 +34,7 @@ public class CustomerDTO {
         return ph;
     }
 
-    public String getBirthday() {
+    public Timestamp getBirthday() {
         return birthday;
     }
 
@@ -64,7 +66,7 @@ public class CustomerDTO {
         this.ph = ph;
     }
 
-    public void setBirthday(String birthday) {
+    public void setBirthday(Timestamp birthday) {
         this.birthday = birthday;
     }
 

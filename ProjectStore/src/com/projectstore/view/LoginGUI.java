@@ -45,6 +45,7 @@ public class LoginGUI extends javax.swing.JFrame implements ActionListener{
         tfPwd = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("H&B Store Management Program");
         setBackground(new java.awt.Color(255, 255, 255));
         setResizable(false);
 

@@ -104,6 +104,7 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
         btSearchAll = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("H&B Store Management Program");
         setResizable(false);
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/—Pngtree—vector_shop_icon_3762863-1.png"))); // NOI18N

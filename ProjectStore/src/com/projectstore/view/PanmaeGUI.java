@@ -98,6 +98,7 @@ public class PanmaeGUI extends javax.swing.JFrame implements ActionListener{
         btCancle = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("결제");
 
         table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
