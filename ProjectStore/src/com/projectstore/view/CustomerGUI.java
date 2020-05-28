@@ -359,12 +359,7 @@ public class CustomerGUI extends javax.swing.JFrame implements ActionListener {
             }
         } else if (e.getSource() == btDelete) {
             try {
-                int n = JOptionPane.showConfirmDialog(this, "정말 삭제하시겠습니까?", "삭제", JOptionPane.YES_NO_OPTION);
-                
-                if(n == JOptionPane.YES_OPTION){
-                    customerDelete();
-                }
-                
+                customerDelete();
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
@@ -497,14 +492,25 @@ public class CustomerGUI extends javax.swing.JFrame implements ActionListener {
 
     private void customerDelete() throws SQLException {
         int row = tableCustomer.getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(this, "삭제할 고객을 선택해야 합니다.");
+            return;
+        }
+
+        int n = JOptionPane.showConfirmDialog(this, "정말 삭제하시겠습니까?", "삭제", JOptionPane.YES_NO_OPTION);
+
+        if (n == JOptionPane.NO_OPTION) {
+            return;
+        }
+
         String customerId = (String) tableCustomer.getValueAt(row, 0);
-        int n = daoCustomer.delete(customerId);
-        
-        if(n>0){
+        int n2 = daoCustomer.delete(customerId);
+
+        if (n2 > 0) {
             JOptionPane.showMessageDialog(this, "삭제 완료!");
             customerSelectAll();
             panmaeSelectAll();
-        }else{
+        } else {
             JOptionPane.showMessageDialog(this, "삭제 실패!");
         }
     }

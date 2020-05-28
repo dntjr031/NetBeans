@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  *
@@ -43,6 +44,14 @@ public class ProMgrDAO {
         } finally {
 
         }
+    }
+    // 수정해야 함
+    public ArrayList<ProMgrDTO> searchAll() {
+        return new ArrayList<ProMgrDTO>();
+    }
+
+    public ArrayList<ProMgrDTO> searchByCode(String accCode) {
+        return new ArrayList<ProMgrDTO>();
     }
 
 }

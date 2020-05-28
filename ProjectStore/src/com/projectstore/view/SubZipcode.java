@@ -24,6 +24,7 @@ import javax.swing.table.DefaultTableModel;
 public class SubZipcode extends javax.swing.JFrame implements ActionListener{
 
     private CustomerInsertGUI CustomerInsertGUI;
+    private AccountInsertGUI accountInsertGUI;
     private ZipcodeDAO dao = new ZipcodeDAO();
     private String[] col = {"우편번호","시도","구군","동","번지"};
     DefaultTableModel model;
@@ -35,10 +36,16 @@ public class SubZipcode extends javax.swing.JFrame implements ActionListener{
         init();
         addEvent();
     }
-
+    // 고객인지 거래처인지 구분해서 처리해야함
     public SubZipcode(CustomerInsertGUI CustomerInsertGUI) {
         this();
         this.CustomerInsertGUI = CustomerInsertGUI;
+        
+    }
+    
+    public SubZipcode(AccountInsertGUI accountInsertGUI) {
+        this();
+        this.accountInsertGUI = accountInsertGUI;
         
     }
     /**

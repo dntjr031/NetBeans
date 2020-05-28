@@ -5,7 +5,6 @@
  */
 package com.model.account;
 
-import com.model.item.ItemDTO;
 import com.projectstore.db.DBUtil;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -27,7 +26,7 @@ public class AccDAO {
         try {
             con = DBUtil.getConnection();
             
-            String sql = "select account_name, rep_name, address1, ACCOUNT_CODE from account order by account_name";
+            String sql = "select * from account order by account_name";
             ps = con.prepareCall(sql);
             
             rs = ps.executeQuery();
@@ -35,10 +34,14 @@ public class AccDAO {
             ArrayList<AccDTO> list = new ArrayList<>();
             while(rs.next()){
                 AccDTO dto = new AccDTO();
-                dto.setAccName(rs.getString(1));
-                dto.setRepName(rs.getString(2));
-                dto.setAddress1(rs.getString(3));
-                dto.setCode(rs.getString(4));
+                dto.setAddress2(rs.getString("address2"));
+                dto.setAccName(rs.getString("account_name"));
+                dto.setRepName(rs.getString("rep_name"));
+                dto.setAddress1(rs.getString("address1"));
+                dto.setCode(rs.getString("ACCOUNT_CODE"));
+                dto.setItemCode(rs.getString(8));
+                dto.setZipcode(rs.getString(5));
+                dto.setHp(rs.getString(4));
                 
                 list.add(dto);
             }
@@ -75,6 +78,10 @@ public class AccDAO {
         } finally {
             DBUtil.dbclose(rs, ps, con);
         }
+    }
+    // 수정해야함
+    public int delete(String accCode) {
+        return 1;
     }
 
 }
