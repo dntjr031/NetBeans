@@ -77,7 +77,7 @@ public class ProductGUI extends javax.swing.JFrame implements ActionListener {
         btCancle = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
         tfInPrice1 = new javax.swing.JTextField();
-        cbItemCode = new javax.swing.JComboBox<>();
+        cbItemName = new javax.swing.JComboBox<>();
         btAccSearch = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -105,7 +105,7 @@ public class ProductGUI extends javax.swing.JFrame implements ActionListener {
 
         jLabel2.setText("상품명");
 
-        jLabel3.setText("품목코드");
+        jLabel3.setText("품목명");
 
         jLabel4.setText("수량");
 
@@ -121,7 +121,7 @@ public class ProductGUI extends javax.swing.JFrame implements ActionListener {
 
         jLabel7.setText("입고가격");
 
-        cbItemCode.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "선택하세요" }));
+        cbItemName.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "선택하세요" }));
 
         btAccSearch.setText("검색");
 
@@ -162,7 +162,7 @@ public class ProductGUI extends javax.swing.JFrame implements ActionListener {
                                     .addComponent(tfquantity)
                                     .addComponent(tfPname)
                                     .addComponent(tfCode))
-                                .addComponent(cbItemCode, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                                .addComponent(cbItemName, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))))))
         );
         plLayout.setVerticalGroup(
             plLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -178,7 +178,7 @@ public class ProductGUI extends javax.swing.JFrame implements ActionListener {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(plLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(cbItemCode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cbItemName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(plLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tfquantity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -280,7 +280,7 @@ public class ProductGUI extends javax.swing.JFrame implements ActionListener {
     private javax.swing.JButton btClose;
     private javax.swing.JButton btDelete;
     private javax.swing.JButton btInsert;
-    private javax.swing.JComboBox<String> cbItemCode;
+    private javax.swing.JComboBox<String> cbItemName;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -363,14 +363,14 @@ public class ProductGUI extends javax.swing.JFrame implements ActionListener {
         tfPname.setText("");
         tfCode.setText("");
         tfSelPrice.setText("");
-        cbItemCode.setSelectedItem("선택하세요");
+        cbItemName.setSelectedItem("선택하세요");
         tfquantity.setText("");
         tfInPrice1.setText("");
         
         tfPname.setEditable(true);
         tfCode.setEditable(true);
         tfSelPrice.setEditable(true);
-        cbItemCode.setEditable(true);
+        cbItemName.setEditable(true);
         tfquantity.setEditable(true);
         tfInPrice1.setEditable(true);
         
@@ -393,10 +393,10 @@ public class ProductGUI extends javax.swing.JFrame implements ActionListener {
             String itemCode = dto.getItem_code();
             ItemDAO daoItem = new ItemDAO();
             ItemDTO dtoItem = daoItem.selectByCode(itemCode);
-            cbItemCode.setSelectedItem(dtoItem.getName());
+            cbItemName.setSelectedItem(dtoItem.getName());
             
             tfCode.setEditable(false);
-            cbItemCode.setEditable(false);
+            cbItemName.setEditable(false);
             tfInPrice1.setEditable(true);
             
             btInsert.setEnabled(true);
@@ -414,11 +414,13 @@ public class ProductGUI extends javax.swing.JFrame implements ActionListener {
         String accCode = tfAccCode.getText();
         String inprice = tfInPrice1.getText();
         
-        String itemName = (String) cbItemCode.getSelectedItem();
+        String itemName = (String) cbItemName.getSelectedItem();
         System.out.println("itmeName=" + itemName);
+        
         ItemDAO daoItem = new ItemDAO();
         ItemDTO dtoItem = daoItem.selectByName(itemName);
         System.out.println("dto=" + dtoItem);
+        
         String itemCode = dtoItem.getCode();
         System.out.println("itemcode=" + itemCode);
         
@@ -520,7 +522,7 @@ public class ProductGUI extends javax.swing.JFrame implements ActionListener {
         itemList = daoitem.selectAll();
         for (int i = 0; i < itemList.size(); i++) {
             System.out.println(itemList.get(i).getName());
-            cbItemCode.addItem(itemList.get(i).getName());
+            cbItemName.addItem(itemList.get(i).getName());
         }
     }
     

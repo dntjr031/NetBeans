@@ -165,7 +165,7 @@ public class CustomerDAO {
 
             String sql = "INSERT into customer\n"
                     + "VALUES (?,?,?,?,?,?,?,?)";
-            ps = con.prepareCall(sql);
+            ps = con.prepareStatement(sql);
 
             ps.setString(6, dto.getZipcode());
             ps.setString(7, dto.getAddress1());
@@ -189,7 +189,7 @@ public class CustomerDAO {
             con = DBUtil.getConnection();
 
             String sql = "DELETE FROM customer WHERE customer_id = ?";
-            ps = con.prepareCall(sql);
+            ps = con.prepareStatement(sql);
 
             ps.setString(1, customerId);
 

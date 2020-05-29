@@ -21,13 +21,18 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author STU-03
  */
-public class SubZipcode extends javax.swing.JFrame implements ActionListener{
+public class SubZipcode extends javax.swing.JFrame implements ActionListener {
 
     private CustomerInsertGUI CustomerInsertGUI;
     private AccountInsertGUI accountInsertGUI;
     private ZipcodeDAO dao = new ZipcodeDAO();
-    private String[] col = {"우편번호","시도","구군","동","번지"};
-    DefaultTableModel model;
+    private String[] col = {"우편번호", "시도", "구군", "동", "번지"};
+    private DefaultTableModel model;
+
+    public static final int ACC = 1;
+    public static final int CUS = 2;
+    private int who = 0;
+
     /**
      * Creates new form SubZipcode
      */
@@ -36,18 +41,21 @@ public class SubZipcode extends javax.swing.JFrame implements ActionListener{
         init();
         addEvent();
     }
+
     // 고객인지 거래처인지 구분해서 처리해야함
     public SubZipcode(CustomerInsertGUI CustomerInsertGUI) {
         this();
         this.CustomerInsertGUI = CustomerInsertGUI;
-        
+        who = CUS;
     }
-    
+
     public SubZipcode(AccountInsertGUI accountInsertGUI) {
         this();
         this.accountInsertGUI = accountInsertGUI;
-        
+        who = ACC;
+
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -171,60 +179,71 @@ public class SubZipcode extends javax.swing.JFrame implements ActionListener{
     private void init() {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
-        
+
         model = new DefaultTableModel();
-        
+
         tableSize();
-        
+
     }
 
     private void addEvent() {
         btClose.addActionListener(this);
         btSearch.addActionListener(this);
         tfDong.addActionListener(this);
-        
+
         table.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                
-                if(e.getSource() == table){
+
+                if (e.getSource() == table) {
                     int row = table.getSelectedRow();
-                    String address="";
+                    String address = "";
                     String zipcode = table.getValueAt(row, 0).toString();
                     for (int i = 1; i < 4; i++) {
                         address += table.getValueAt(row, i) + " ";
                     }
-                    CustomerInsertGUI.tfZipcode.setText(zipcode);
-                    CustomerInsertGUI.tfAddress1.setText(address);
+                    if (who == CUS) {
+                        CustomerInsertGUI.tfZipcode.setText(zipcode);
+                        CustomerInsertGUI.tfAddress1.setText(address);
+                    } else if (who == ACC) {
+                        accountInsertGUI.tfZipcode.setText(zipcode);
+                        accountInsertGUI.tfAddress1.setText(address);
+                    }
                 }
-                
+
             }
 
             @Override
             public void mousePressed(MouseEvent e) {
-                if(e.getClickCount() == 2){
-                    if(e.getSource() == table){
-                    int row = table.getSelectedRow();
-                    String address="";
-                    String zipcode = table.getValueAt(row, 0).toString();
-                    for (int i = 1; i < 4; i++) {
-                        address += table.getValueAt(row, i) + " ";
-                    }
-                    CustomerInsertGUI.tfZipcode.setText(zipcode);
-                    CustomerInsertGUI.tfAddress1.setText(address);
+                if (e.getClickCount() == 2) {
+                    if (e.getSource() == table) {
+                        int row = table.getSelectedRow();
+                        String address = "";
+                        String zipcode = table.getValueAt(row, 0).toString();
+                        for (int i = 1; i < 4; i++) {
+                            address += table.getValueAt(row, i) + " ";
+                        }
+                        if (who == CUS) {
+                            CustomerInsertGUI.tfZipcode.setText(zipcode);
+                            CustomerInsertGUI.tfAddress1.setText(address);
+                        } else if (who == ACC) {
+                            accountInsertGUI.tfZipcode.setText(zipcode);
+                            accountInsertGUI.tfAddress1.setText(address);
+                        }
+                        dispose();
                     }
                 }
             }
-            
+
         });
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == btClose){
+        if (e.getSource() == btClose) {
             this.dispose();
         }
-        if(e.getSource() == btSearch || e.getSource() == tfDong){
+        if (e.getSource() == btSearch || e.getSource() == tfDong) {
             try {
                 selectByDong();
             } catch (SQLException ex) {
@@ -234,43 +253,42 @@ public class SubZipcode extends javax.swing.JFrame implements ActionListener{
     }
 
     private void selectByDong() throws SQLException {
-        
+
         String dong = tfDong.getText();
-        
-        if(dong == null || dong.isEmpty()){
+
+        if (dong == null || dong.isEmpty()) {
             JOptionPane.showMessageDialog(this, "동을 입력하셔야 합니다");
             return;
         }
-        
+
         ArrayList<ZipcodeDTO> list = dao.selectByDong(dong);
-        
-        if(list == null || list.isEmpty()){
+
+        if (list == null || list.isEmpty()) {
             JOptionPane.showMessageDialog(this, dong + "의 검색결과가 없습니다.");
             tfDong.setText("");
             tfDong.requestFocus();
         }
-        
+
         String[][] data = new String[list.size()][col.length];
         for (int i = 0; i < list.size(); i++) {
             ZipcodeDTO dto = list.get(i);
-            
+
             data[i][0] = dto.getZipcode();
             data[i][1] = dto.getSido();
             data[i][2] = dto.getGugun();
             data[i][3] = dto.getDong();
-            
+
             String bunji = dto.getStartbunji();
             String endbunji = dto.getEndbunji();
-            if(endbunji != null && !endbunji.isEmpty()){
+            if (endbunji != null && !endbunji.isEmpty()) {
                 bunji = "(" + bunji + " ~ " + endbunji + ")";
             }
             data[i][4] = bunji;
-            
-            
+
         }
         model.setDataVector(data, col);
         table.setModel(model);
-        
+
         tableSize();
     }
 
