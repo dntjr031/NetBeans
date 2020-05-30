@@ -30,6 +30,8 @@ import javax.swing.table.DefaultTableModel;
  */
 public class CustomerGUI extends javax.swing.JFrame implements ActionListener {
 
+    
+    private StoreMainGUI storeMainGUI;
     private String userId;
     private final boolean UPDATE = true, DETAIL = false;
     private CustomerDAO daoCustomer = new CustomerDAO();
@@ -52,6 +54,11 @@ public class CustomerGUI extends javax.swing.JFrame implements ActionListener {
         initComponents();
         init();
         addEvent();
+    }
+
+    CustomerGUI(StoreMainGUI aThis) {
+        this();
+        this.storeMainGUI = aThis;
     }
 
     /**
@@ -326,9 +333,11 @@ public class CustomerGUI extends javax.swing.JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btClose) {
             dispose();
+            storeMainGUI.searchAll();
         } else if (e.getSource() == btInsert) {
             CustomerInsertGUI ci = new CustomerInsertGUI(this);
             ci.setVisible(true);
+            storeMainGUI.searchAll();
         } else if (e.getSource() == btUpdate) {
             int row = tableCustomer.getSelectedRow();
             if (row == -1) {
@@ -338,6 +347,7 @@ public class CustomerGUI extends javax.swing.JFrame implements ActionListener {
             String id = (String) tableCustomer.getValueAt(row, 0);
             CustomerInsertGUI ci = new CustomerInsertGUI(id, UPDATE, this);
             ci.setVisible(true);
+            storeMainGUI.searchAll();
         } else if (e.getSource() == btDetail) {
             int row = tableCustomer.getSelectedRow();
             if (row == -1) {
@@ -360,6 +370,7 @@ public class CustomerGUI extends javax.swing.JFrame implements ActionListener {
         } else if (e.getSource() == btDelete) {
             try {
                 customerDelete();
+                storeMainGUI.searchAll();
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }

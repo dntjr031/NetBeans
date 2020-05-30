@@ -182,7 +182,7 @@ public class AccDAO {
         try {
             con = DBUtil.getConnection();
 
-            String sql = "select * from customer where CUSTOMER_ID = ?";
+            String sql = "select * from ACCOUNT where ACCOUNT_CODE = ?";
             ps = con.prepareCall(sql);
 
             ps.setString(1, accCode);

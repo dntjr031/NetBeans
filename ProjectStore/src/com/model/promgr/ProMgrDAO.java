@@ -51,9 +51,10 @@ public class ProMgrDAO {
             con = DBUtil.getConnection();
 
             String sql = "select * from PRODUCT_MGR order by TRADING_DAY desc";
-            ps = con.prepareCall(sql);
+            ps = con.prepareStatement(sql);
 
             rs = ps.executeQuery();
+            
             ArrayList<ProMgrDTO> list = new ArrayList<>();
             while (rs.next()) {
                 ProMgrDTO dto = new ProMgrDTO();

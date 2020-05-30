@@ -17,8 +17,6 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -29,6 +27,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public class AccountGUI extends javax.swing.JFrame implements ActionListener {
 
+    private StoreMainGUI storeMainGUI;
     private String userId;
     private final boolean UPDATE = true, DETAIL = false;
     private ArrayList<AccDTO> listAcc;
@@ -51,6 +50,11 @@ public class AccountGUI extends javax.swing.JFrame implements ActionListener {
         initComponents();
         init();
         addEvent();
+    }
+
+    AccountGUI(StoreMainGUI aThis) {
+        this();
+        this.storeMainGUI = aThis;
     }
 
     /**
@@ -330,19 +334,22 @@ public class AccountGUI extends javax.swing.JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btClose) {
             dispose();
+            storeMainGUI.searchAll();
         } else if (e.getSource() == btInsert) {
             AccountInsertGUI ai = new AccountInsertGUI(this);
             ai.setVisible(true);
+            storeMainGUI.searchAll();
         } else if (e.getSource() == btUpdate) {
             int row = tableAcc.getSelectedRow();
             if (row == -1) {
                 JOptionPane.showMessageDialog(this, "정보를 볼 고객을 선택해야 합니다.");
                 return;
             }
-            String id = (String) tableAcc.getValueAt(row, 0);
-            AccountInsertGUI ai = new AccountInsertGUI(id, UPDATE, this);
+            String accCode = (String) tableAcc.getValueAt(row, 0);
+            AccountInsertGUI ai = new AccountInsertGUI(accCode, UPDATE, this);
             ai.setVisible(true);
 
+            storeMainGUI.searchAll();
         } else if (e.getSource() == btDetail) {
             int row = tableAcc.getSelectedRow();
             if (row == -1) {
@@ -370,6 +377,7 @@ public class AccountGUI extends javax.swing.JFrame implements ActionListener {
         } else if (e.getSource() == btDelete) {
             try {
                 accDelete();
+                storeMainGUI.searchAll();
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
@@ -417,12 +425,13 @@ public class AccountGUI extends javax.swing.JFrame implements ActionListener {
         String[][] data = new String[listMgr.size()][colMgr.length];
         for (int i = 0; i < listMgr.size(); i++) {
             ProMgrDTO dto = listMgr.get(i);
+            
             data[i][0] = dto.getNo() + "";
             data[i][1] = dto.getPcode();
             data[i][2] = dto.getPrice() + "";
             data[i][3] = dto.getQuantity() + "";
-            data[i][3] = dto.getTotalPrice() + "";
-            data[i][3] = dto.getAccCode();
+            data[i][4] = dto.getTotalPrice() + "";
+            data[i][5] = dto.getAccCode();
             data[i][6] = dateFormat.format(new Date(dto.getTradingDay().getTime()));
         }
         modelMgr.setDataVector(data, colMgr);

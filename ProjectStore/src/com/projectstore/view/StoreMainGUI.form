@@ -60,7 +60,7 @@
                       <EmptySpace min="-2" pref="41" max="-2" attributes="0"/>
                       <Component id="btAccount" min="-2" pref="113" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
-                      <Component id="btAccount1" min="-2" pref="113" max="-2" attributes="0"/>
+                      <Component id="btSeller" min="-2" pref="113" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -96,7 +96,7 @@
                       <Component id="btLogout" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Component id="btAccount" alignment="0" min="-2" pref="107" max="-2" attributes="0"/>
-                  <Component id="btAccount1" min="-2" pref="107" max="-2" attributes="0"/>
+                  <Component id="btSeller" min="-2" pref="107" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
@@ -365,7 +365,7 @@
         <Property name="text" type="java.lang.String" value=" ~ "/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="btAccount1">
+    <Component class="javax.swing.JButton" name="btSeller">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Dialog" size="14" style="1"/>

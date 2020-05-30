@@ -38,15 +38,18 @@
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="1" attributes="0">
-                          <Group type="102" alignment="1" attributes="0">
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Group type="102" attributes="0">
+                              <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
+                              <Component id="btSearchAll" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
                               <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="tfSearch" min="-2" pref="80" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="btSearch" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="jScrollPane1" alignment="0" min="-2" pref="426" max="-2" attributes="0"/>
+                          <Component id="jScrollPane1" min="-2" pref="426" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
@@ -82,11 +85,14 @@
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="tfSearch" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="btSearch" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="btClose" alignment="3" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="tfSearch" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btSearch" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btClose" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Component id="btSearchAll" alignment="0" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
           </Group>
@@ -98,14 +104,15 @@
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
       <SubComponents>
-        <Component class="javax.swing.JTable" name="jTable1">
+        <Component class="javax.swing.JTable" name="tablesel">
           <Properties>
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-              <Table columnCount="4" rowCount="4">
-                <Column editable="true" title="Title 1" type="java.lang.Object"/>
-                <Column editable="true" title="Title 2" type="java.lang.Object"/>
-                <Column editable="true" title="Title 3" type="java.lang.Object"/>
-                <Column editable="true" title="Title 4" type="java.lang.Object"/>
+              <Table columnCount="5" rowCount="0">
+                <Column editable="true" title="&#xc544;&#xc774;&#xb514;" type="java.lang.Object"/>
+                <Column editable="true" title="&#xc774;&#xb984;" type="java.lang.Object"/>
+                <Column editable="true" title="&#xd578;&#xb4dc;&#xd3f0; &#xbc88;&#xd638;" type="java.lang.Object"/>
+                <Column editable="true" title="&#xc131;&#xbcc4;" type="java.lang.Object"/>
+                <Column editable="true" title="&#xace0;&#xc6a9; &#xb0a0;&#xc9dc;" type="java.lang.Object"/>
               </Table>
             </Property>
           </Properties>
@@ -116,14 +123,14 @@
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
       <SubComponents>
-        <Component class="javax.swing.JTable" name="jTable2">
+        <Component class="javax.swing.JTable" name="tablepan">
           <Properties>
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-              <Table columnCount="4" rowCount="4">
-                <Column editable="true" title="Title 1" type="java.lang.Object"/>
-                <Column editable="true" title="Title 2" type="java.lang.Object"/>
-                <Column editable="true" title="Title 3" type="java.lang.Object"/>
-                <Column editable="true" title="Title 4" type="java.lang.Object"/>
+              <Table columnCount="4" rowCount="0">
+                <Column editable="true" title="&#xd310;&#xb9e4;&#xc6d0; &#xc774;&#xb984;" type="java.lang.Object"/>
+                <Column editable="true" title="&#xc0c1;&#xd488; &#xcf54;&#xb4dc;" type="java.lang.Object"/>
+                <Column editable="true" title="&#xac00;&#xaca9;" type="java.lang.Object"/>
+                <Column editable="true" title="&#xd310;&#xb9e4; &#xb0a0;&#xc9dc;" type="java.lang.Object"/>
               </Table>
             </Property>
           </Properties>
@@ -150,8 +157,8 @@
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="jTextField1" pref="135" max="32767" attributes="0"/>
-                      <Component id="jTextField2" max="32767" attributes="0"/>
+                      <Component id="tfselName" pref="135" max="32767" attributes="0"/>
+                      <Component id="tfTotal" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace pref="26" max="32767" attributes="0"/>
               </Group>
@@ -163,11 +170,11 @@
                   <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jTextField1" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="tfselName" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="jTextField2" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="tfTotal" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace pref="18" max="32767" attributes="0"/>
@@ -181,17 +188,17 @@
             <Property name="text" type="java.lang.String" value="&#xc774;&#xb984; : "/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="jTextField1">
+        <Component class="javax.swing.JTextField" name="tfselName">
           <Properties>
             <Property name="editable" type="boolean" value="false"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel2">
           <Properties>
-            <Property name="text" type="java.lang.String" value="&#xcd1d; &#xac70;&#xb798;&#xae08;&#xc561; :"/>
+            <Property name="text" type="java.lang.String" value="&#xcd1d; &#xd310;&#xb9e4;&#xae08;&#xc561; :"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="jTextField2">
+        <Component class="javax.swing.JTextField" name="tfTotal">
           <Properties>
             <Property name="editable" type="boolean" value="false"/>
           </Properties>
@@ -233,6 +240,11 @@
     <Component class="javax.swing.JButton" name="btClose">
       <Properties>
         <Property name="text" type="java.lang.String" value="&#xb2eb;&#xae30;"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="btSearchAll">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="&#xc804;&#xccb4;&#xc870;&#xd68c;"/>
       </Properties>
     </Component>
   </SubComponents>

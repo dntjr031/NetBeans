@@ -30,7 +30,7 @@ public class CustomerDAO {
             con = DBUtil.getConnection();
 
             String sql = "select count(*) from customer where customer_id = ?";
-            ps = con.prepareCall(sql);
+            ps = con.prepareStatement(sql);
 
             ps.setString(1, customerId);
             rs = ps.executeQuery();
@@ -54,7 +54,7 @@ public class CustomerDAO {
             con = DBUtil.getConnection();
 
             String sql = "select * from customer order by customer_name";
-            ps = con.prepareCall(sql);
+            ps = con.prepareStatement(sql);
 
             rs = ps.executeQuery();
             ArrayList<CustomerDTO> list = new ArrayList<>();
@@ -82,7 +82,7 @@ public class CustomerDAO {
             con = DBUtil.getConnection();
 
             String sql = "select * from customer where customer_name like '%' || ? || '%' order by customer_name";
-            ps = con.prepareCall(sql);
+            ps = con.prepareStatement(sql);
 
             ps.setString(1, name);
 
@@ -112,7 +112,7 @@ public class CustomerDAO {
             con = DBUtil.getConnection();
 
             String sql = "select * from customer where CUSTOMER_ID = ?";
-            ps = con.prepareCall(sql);
+            ps = con.prepareStatement(sql);
 
             ps.setString(1, userId);
 
@@ -143,7 +143,7 @@ public class CustomerDAO {
             String sql = "update customer\n"
                     + "set zipcode= ?, address1=?, address2=?, customer_ph = ?\n"
                     + "where customer_id = ?";
-            ps = con.prepareCall(sql);
+            ps = con.prepareStatement(sql);
 
             ps.setString(1, dto.getZipcode());
             ps.setString(2, dto.getAddress1());

@@ -25,12 +25,14 @@ public class SubZipcode extends javax.swing.JFrame implements ActionListener {
 
     private CustomerInsertGUI CustomerInsertGUI;
     private AccountInsertGUI accountInsertGUI;
+    private SellerInsertGUI sellerInsertGUI;
     private ZipcodeDAO dao = new ZipcodeDAO();
     private String[] col = {"우편번호", "시도", "구군", "동", "번지"};
     private DefaultTableModel model;
 
     public static final int ACC = 1;
     public static final int CUS = 2;
+    public static final int SEL = 3;
     private int who = 0;
 
     /**
@@ -53,6 +55,13 @@ public class SubZipcode extends javax.swing.JFrame implements ActionListener {
         this();
         this.accountInsertGUI = accountInsertGUI;
         who = ACC;
+
+    }
+
+    public SubZipcode(SellerInsertGUI sellerInsertGUI) {
+        this();
+        this.sellerInsertGUI = sellerInsertGUI;
+        who = SEL;
 
     }
 
@@ -215,8 +224,9 @@ public class SubZipcode extends javax.swing.JFrame implements ActionListener {
 
             @Override
             public void mousePressed(MouseEvent e) {
-                if (e.getClickCount() == 2) {
-                    if (e.getSource() == table) {
+
+                if (e.getSource() == table) {
+                    if (e.getClickCount() == 2) {
                         int row = table.getSelectedRow();
                         String address = "";
                         String zipcode = table.getValueAt(row, 0).toString();
@@ -229,6 +239,9 @@ public class SubZipcode extends javax.swing.JFrame implements ActionListener {
                         } else if (who == ACC) {
                             accountInsertGUI.tfZipcode.setText(zipcode);
                             accountInsertGUI.tfAddress1.setText(address);
+                        } else if (who == ACC) {
+                            sellerInsertGUI.tfZipcode.setText(zipcode);
+                            sellerInsertGUI.tfAddress1.setText(address);
                         }
                         dispose();
                     }

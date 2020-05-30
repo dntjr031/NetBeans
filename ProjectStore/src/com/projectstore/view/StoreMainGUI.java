@@ -17,8 +17,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -28,7 +26,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
 
-    private String selId;
+    public String selId;
     private ProductDAO dao = new ProductDAO();
     private String[] colList = {"상품코드", "상품이름", "상품가격", "재고"};
     private String[] colSel = {"상품코드", "상품이름", "상품가격", "개수"};
@@ -100,7 +98,7 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
         tfSearch1 = new javax.swing.JTextField();
         tfSearch2 = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        btAccount1 = new javax.swing.JButton();
+        btSeller = new javax.swing.JButton();
         btSearchAll = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -226,12 +224,12 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
 
         jLabel4.setText(" ~ ");
 
-        btAccount1.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        btAccount1.setForeground(new java.awt.Color(0, 0, 0));
-        btAccount1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/Seller.png"))); // NOI18N
-        btAccount1.setText("판매원관리");
-        btAccount1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btAccount1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btSeller.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        btSeller.setForeground(new java.awt.Color(0, 0, 0));
+        btSeller.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/Seller.png"))); // NOI18N
+        btSeller.setText("판매원관리");
+        btSeller.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btSeller.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
 
         btSearchAll.setText("전체조회");
 
@@ -271,7 +269,7 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
                         .addGap(41, 41, 41)
                         .addComponent(btAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btAccount1, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btSeller, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(14, 14, 14)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -299,7 +297,7 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
                         .addComponent(jLabel3)
                         .addComponent(btLogout))
                     .addComponent(btAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btAccount1, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btSeller, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btSearch)
@@ -362,7 +360,6 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btAccount;
-    private javax.swing.JButton btAccount1;
     private javax.swing.JButton btCancle;
     private javax.swing.JButton btCustomer;
     private javax.swing.JButton btDelete;
@@ -371,6 +368,7 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
     private javax.swing.JButton btProduct;
     private javax.swing.JButton btSearch;
     private javax.swing.JButton btSearchAll;
+    private javax.swing.JButton btSeller;
     private javax.swing.JComboBox<String> cbSearch;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -416,6 +414,7 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
         cbSearch.addItemListener(new EventHander());
         tableList.addMouseListener(new EventHander());
         btSearchAll.addActionListener(this);
+        btSeller.addActionListener(this);
     }
 
     public void searchAll() {
@@ -629,11 +628,11 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
             p.setVisible(true);
 
         } else if (e.getSource() == btCustomer) {
-            CustomerGUI c = new CustomerGUI();
+            CustomerGUI c = new CustomerGUI(this);
             c.setVisible(true);
 
         } else if (e.getSource() == btAccount) {
-            AccountGUI a = new AccountGUI();
+            AccountGUI a = new AccountGUI(this);
             a.setVisible(true);
 
         } else if (e.getSource() == btCancle) {
@@ -649,6 +648,9 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
             tableListWidth();
         } else if (e.getSource() == btPayment) {
             payment();
+        }else if(e.getSource() == btSeller){
+            SellerGUI s = new SellerGUI(this);
+            s.setVisible(true);
         }
     }
 

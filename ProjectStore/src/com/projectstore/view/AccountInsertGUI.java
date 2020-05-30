@@ -11,7 +11,6 @@ import com.model.item.ItemDAO;
 import com.model.item.ItemDTO;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Date;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -362,7 +361,7 @@ public class AccountInsertGUI extends javax.swing.JFrame implements ActionListen
             }
         } else if (e.getSource() == btDup) {
             try {
-                idDup();
+                accCodeDup();
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
@@ -530,15 +529,16 @@ public class AccountInsertGUI extends javax.swing.JFrame implements ActionListen
         dispose();
     }
 
-    private void idDup() throws SQLException {
-        String id = tfAccCode.getText();
-        if (id == null || id.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "아이디를 입력하셔야 합니다.");
+    private void accCodeDup() throws SQLException {
+        String accCode = tfAccCode.getText();
+        if (accCode == null || accCode.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "업체코드를 입력하셔야 합니다.");
             tfAccCode.requestFocus();
             return;
         }
 
-        int n = dao.idCheck(id);
+        int n = dao.idCheck(accCode);
+        
         if (n == AccDAO.NO) {
             IdCheck = true;
             tfAccCode.setEditable(false);
@@ -547,9 +547,9 @@ public class AccountInsertGUI extends javax.swing.JFrame implements ActionListen
         }
 
         if (IdCheck) {
-            JOptionPane.showMessageDialog(this, "사용가능한 아이디입니다.");
+            JOptionPane.showMessageDialog(this, "사용가능한 코드입니다.");
         } else {
-            JOptionPane.showMessageDialog(this, "이미 사용중인 아이디입니다.");
+            JOptionPane.showMessageDialog(this, "이미 사용중인 코드입니다.");
         }
     }
 
