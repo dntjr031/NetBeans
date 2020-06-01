@@ -9,6 +9,8 @@ import com.model.account.AccDAO;
 import com.model.account.AccDTO;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -26,7 +28,7 @@ public class AccInfoGUI extends javax.swing.JFrame implements ActionListener {
     private DefaultTableModel model = new DefaultTableModel();
     private ProductGUI aThis = null;
     private AccDAO dao = new AccDAO();
-    private String[] col = {"거래처코드","거래처명", "담당자명", "주소"};
+    private String[] col = {"거래처코드", "거래처명", "담당자명", "주소"};
 
     /**
      * Creates new form AccInfoGUI
@@ -60,6 +62,7 @@ public class AccInfoGUI extends javax.swing.JFrame implements ActionListener {
         btSubmit = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("거래처 검색");
 
         btAll.setText("전체조회");
 
@@ -176,6 +179,27 @@ public class AccInfoGUI extends javax.swing.JFrame implements ActionListener {
         btAll.addActionListener(this);
         btSearch.addActionListener(this);
         btSubmit.addActionListener(this);
+        table.addMouseListener(new MouseAdapter() {
+            
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (e.getSource() == table) {
+                    if (e.getClickCount() == 2) {
+                        int row = table.getSelectedRow();
+                        String code = (String) table.getValueAt(row, 0);
+
+                        if (code == null || code.isEmpty()) {
+                            JOptionPane.showMessageDialog(AccInfoGUI.this, "거래처를 선택하셔야 합니다.");
+                            return;
+                        }
+
+                        aThis.tfAccCode.setText(code);
+                        dispose();
+                    }
+                }
+            }
+
+        });
     }
 
     private void searchAll() {
@@ -209,15 +233,15 @@ public class AccInfoGUI extends javax.swing.JFrame implements ActionListener {
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
-        }else if(e.getSource() == btSubmit){
+        } else if (e.getSource() == btSubmit) {
             int row = table.getSelectedRow();
             String code = (String) table.getValueAt(row, 0);
-            
-            if(code == null || code.isEmpty()){
+
+            if (code == null || code.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "거래처를 선택하셔야 합니다.");
                 return;
             }
-            
+
             aThis.tfAccCode.setText(code);
             dispose();
         }

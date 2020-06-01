@@ -14,12 +14,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -319,6 +316,7 @@ public class CustomerGUI extends javax.swing.JFrame implements ActionListener {
         });
         btSearch.addActionListener(this);
         btDelete.addActionListener(this);
+        tfSearch.addActionListener(this);
     }
 
     private void init() {
@@ -361,7 +359,7 @@ public class CustomerGUI extends javax.swing.JFrame implements ActionListener {
             customerSelectAll();
             panmaeSelectAll();
             textClear();
-        } else if (e.getSource() == btSearch) {
+        } else if (e.getSource() == btSearch || e.getSource()==tfSearch) {
             try {
                 customerSearchByName();
             } catch (SQLException ex) {
@@ -441,11 +439,11 @@ public class CustomerGUI extends javax.swing.JFrame implements ActionListener {
     }
 
     private void panmaeSelectById(String customerId) throws SQLException {
-        listPanmae = daoPanmae.searchById(customerId);
+        listPanmae = daoPanmae.searchByCustomerId(customerId);
         totalPrice = 0;
 
         if (listPanmae == null || listPanmae.size() == 0 || listPanmae.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "판매내역이 없습니다.");
+            JOptionPane.showMessageDialog(this, "구매내역이 없습니다.");
             textClear();
             return;
         }

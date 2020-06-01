@@ -316,6 +316,7 @@ public class AccountGUI extends javax.swing.JFrame implements ActionListener {
         });
         btSearch.addActionListener(this);
         btDelete.addActionListener(this);
+        tfSearch.addActionListener(this);
     }
 
     private void init() {
@@ -368,7 +369,7 @@ public class AccountGUI extends javax.swing.JFrame implements ActionListener {
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
-        } else if (e.getSource() == btSearch) {
+        } else if (e.getSource() == btSearch || e.getSource()==tfSearch) {
             try {
                 accSearchByName();
             } catch (SQLException ex) {

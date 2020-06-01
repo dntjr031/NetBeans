@@ -98,12 +98,53 @@ public class SellerDAO {
         }
     }
 
-    public int update(SellerDTO dto) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public int update(SellerDTO dto) throws SQLException {
+        try {
+            con = DBUtil.getConnection();
+
+            String sql = "UPDATE seller \n"
+                    + "SET SELLER_PWD=?, SELLER_HP=? , ZIPCODE=? , ADDRESS1=? , ADDRESS2=? \n"
+                    + "where SELLER_ID = ?";
+            ps = con.prepareStatement(sql);
+
+            ps.setString(1, dto.getSeller_pwd());
+            ps.setString(2, dto.getSeller_hp());
+            ps.setString(3, dto.getZipcode());
+            ps.setString(4, dto.getAddress1());
+            ps.setString(5, dto.getAddress2());
+            ps.setString(6, dto.getSeller_id());
+
+            int n = ps.executeUpdate();
+            return n;
+        } finally {
+            DBUtil.dbclose(ps, con);
+        }
     }
 
-    public int insert(SellerDTO dto) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public int insert(SellerDTO dto) throws SQLException {
+        try {
+            con = DBUtil.getConnection();
+
+            String sql = "insert into seller(SELLER_ID,SELLER_PWD,SELLER_NAME,SELLER_HP,\n"
+                    + "    SELLER_JUMIN,SELLER_GENDER,ZIPCODE,ADDRESS1,ADDRESS2)\n"
+                    + "VALUES(?,?,?,?,?,?,?,?,?)";
+            ps = con.prepareStatement(sql);
+
+            ps.setString(1, dto.getSeller_id());
+            ps.setString(2, dto.getSeller_pwd());
+            ps.setString(3, dto.getSeller_name());
+            ps.setString(4, dto.getSeller_hp());
+            ps.setString(5, dto.getSeller_jumin());
+            ps.setString(6, dto.getSeller_gender());
+            ps.setString(7, dto.getZipcode());
+            ps.setString(8, dto.getAddress1());
+            ps.setString(9, dto.getAddress2());
+
+            int n = ps.executeUpdate();
+            return n;
+        } finally {
+            DBUtil.dbclose(ps, con);
+        }
     }
 
     public ArrayList<SellerDTO> selectAll() throws SQLException {
@@ -160,11 +201,11 @@ public class SellerDAO {
                 dto.setSeller_name(rs.getString(3));
                 dto.setSeller_hp(rs.getString(4));
                 dto.setSeller_jumin(rs.getString(5));
-                dto.setSeller_gender(rs.getString(5));
-                dto.setZipcode(rs.getString(6));
-                dto.setAddress1(rs.getString(7));
-                dto.setAddress2(rs.getString(8));
-                dto.setHiredate(rs.getTimestamp(4));
+                dto.setSeller_gender(rs.getString(6));
+                dto.setZipcode(rs.getString(7));
+                dto.setAddress1(rs.getString(8));
+                dto.setAddress2(rs.getString(9));
+                dto.setHiredate(rs.getTimestamp(10));
 
                 list.add(dto);
             }

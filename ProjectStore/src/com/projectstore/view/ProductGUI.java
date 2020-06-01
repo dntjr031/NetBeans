@@ -463,6 +463,11 @@ public class ProductGUI extends javax.swing.JFrame implements ActionListener {
             return;
         }
         
+        if (Integer.parseInt(quantity) <= 0 ) {
+            JOptionPane.showMessageDialog(this, "입고 개수를 정확히 입력해 주세요.");
+            return;
+        }
+        
         ProductDTO dtoPro = new ProductDTO();
         dtoPro.setItem_code(itemCode);
         dtoPro.setPcode(pcode);
@@ -551,9 +556,15 @@ public class ProductGUI extends javax.swing.JFrame implements ActionListener {
     }
 
     private void productDelete() throws SQLException {
+        
         String pcode = tfCode.getText();
         if(pcode == null || pcode.isEmpty()){
             JOptionPane.showMessageDialog(this, "삭제할 상품을 클릭해야 합니다.");
+            return;
+        }
+        
+        int n1 = JOptionPane.showConfirmDialog(this, "정말 삭제하시겠습니까?","상품 삭제", JOptionPane.OK_CANCEL_OPTION);
+        if(n1 == JOptionPane.CANCEL_OPTION){
             return;
         }
         

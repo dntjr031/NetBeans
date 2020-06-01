@@ -217,6 +217,9 @@ public class SubZipcode extends javax.swing.JFrame implements ActionListener {
                     } else if (who == ACC) {
                         accountInsertGUI.tfZipcode.setText(zipcode);
                         accountInsertGUI.tfAddress1.setText(address);
+                    } else if (who == SEL) {
+                        sellerInsertGUI.tfZipcode.setText(zipcode);
+                        sellerInsertGUI.tfAddress1.setText(address);
                     }
                 }
 
@@ -239,7 +242,7 @@ public class SubZipcode extends javax.swing.JFrame implements ActionListener {
                         } else if (who == ACC) {
                             accountInsertGUI.tfZipcode.setText(zipcode);
                             accountInsertGUI.tfAddress1.setText(address);
-                        } else if (who == ACC) {
+                        } else if (who == SEL) {
                             sellerInsertGUI.tfZipcode.setText(zipcode);
                             sellerInsertGUI.tfAddress1.setText(address);
                         }

@@ -14,8 +14,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -24,21 +22,21 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author STU-03
  */
-public class PanmaeGUI extends javax.swing.JFrame implements ActionListener{
+public class PanmaeGUI extends javax.swing.JFrame implements ActionListener {
 
     private String selid;
     private int sum;
     private ArrayList<ProductDTO> panmaeList;
     private DefaultTableModel model;
     private String[] colSel = {"상품코드", "상품이름", "상품가격", "개수"};
-    
+
     private CustomerDAO daoCustomer = new CustomerDAO();
     private PanmaeDAO daoPanmae = new PanmaeDAO();
     private ProductDAO daoProduct = new ProductDAO();
-    
+
     private boolean check = false;
     private StoreMainGUI sm = null;
-    
+
     /**
      * Creates new form PanmaeGUI
      */
@@ -54,11 +52,11 @@ public class PanmaeGUI extends javax.swing.JFrame implements ActionListener{
         this.selid = selId;
         tfsSelId.setText(selId);
         this.sum = sum;
-        tfPrice.setText(sum+"");
+        tfPrice.setText(sum + "");
         this.panmaeList = panmaeList;
-        System.out.println("selid="+selId+", list"+panmaeList.size()+", sum="+sum);
-        
-        if(panmaeList == null || panmaeList.isEmpty()){
+        System.out.println("selid=" + selId + ", list" + panmaeList.size() + ", sum=" + sum);
+
+        if (panmaeList == null || panmaeList.isEmpty()) {
             JOptionPane.showMessageDialog(this, "선택된 상품이 없습니다.");
             dispose();
         }
@@ -66,11 +64,11 @@ public class PanmaeGUI extends javax.swing.JFrame implements ActionListener{
         String[][] data = new String[panmaeList.size()][colSel.length];
         for (int i = 0; i < panmaeList.size(); i++) {
             ProductDTO dto = panmaeList.get(i);
-            
+
             data[i][0] = dto.getPcode();
             data[i][1] = dto.getPname();
-            data[i][2] = dto.getPrice()+"";
-            data[i][3] = 1+"";
+            data[i][2] = dto.getPrice() + "";
+            data[i][3] = 1 + "";
         }
         model.setDataVector(data, colSel);
         table.setModel(model);
@@ -242,27 +240,28 @@ public class PanmaeGUI extends javax.swing.JFrame implements ActionListener{
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         tfCustomerId.requestFocus();
         setLocationRelativeTo(null);
-        
+
     }
 
     private void addEvent() {
         btCheck.addActionListener(this);
         btCancle.addActionListener(this);
         btSubmit.addActionListener(this);
+        tfCustomerId.addActionListener(this);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == btCheck){
+        if (e.getSource() == btCheck || e.getSource()==tfCustomerId) {
             try {
                 idCheck();
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
-            
-        }else if(e.getSource() == btCancle){
+
+        } else if (e.getSource() == btCancle) {
             dispose();
-        }else if(e.getSource() == btSubmit){
+        } else if (e.getSource() == btSubmit) {
             try {
                 Submit();
                 dispose();
@@ -275,21 +274,21 @@ public class PanmaeGUI extends javax.swing.JFrame implements ActionListener{
 
     private void idCheck() throws SQLException {
         String customerId = tfCustomerId.getText();
-        
-        if(customerId == null || customerId.isEmpty()){
+
+        if (customerId == null || customerId.isEmpty()) {
             JOptionPane.showMessageDialog(this, "고객아이디를 입력하셔야 합니다.");
             tfCustomerId.requestFocus();
             return;
         }
-        
+
         int n = daoCustomer.idCheck(customerId);
-        
+
         String result = "";
-        if(n == CustomerDAO.OK){
+        if (n == CustomerDAO.OK) {
             result = customerId + "에 해당하는 아이디가 있습니다.";
             check = true;
             tfCustomerId.setEditable(false);
-        }else{
+        } else {
             result = customerId + "에 해당하는 아이디가 없습니다.";
             tfCustomerId.setText("");
             tfCustomerId.requestFocus();
@@ -308,9 +307,9 @@ public class PanmaeGUI extends javax.swing.JFrame implements ActionListener{
             dtoPan.setPrice(dto.getPrice());
             dtoPan.setQuantity(1);
             dtoPan.setSellerId(tfsSelId.getText());
-            
+
             int insertN = daoPanmae.insertPanmae(dtoPan);
-            
+
             int panmaeN = daoProduct.panmae(dtoPan.getPcode());
             System.out.println("처리된 결과 insertN=" + insertN + ", panmaeN=" + panmaeN);
         }

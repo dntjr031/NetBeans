@@ -18,7 +18,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
- * 상세정보, 수정 누르면 값 들어가게 수정해야함
+ *
  * @author STU-03
  */
 public class AccountInsertGUI extends javax.swing.JFrame implements ActionListener {

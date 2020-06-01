@@ -415,6 +415,9 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
         tableList.addMouseListener(new EventHander());
         btSearchAll.addActionListener(this);
         btSeller.addActionListener(this);
+        
+        tfSearch1.addActionListener(this);
+        tfSearch2.addActionListener(this);
     }
 
     public void searchAll() {
@@ -484,6 +487,9 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
             } else {
                 searchCode(val1);
             }
+            tfSearch1.setText("");
+            tfSearch2.setText("");
+            tableListWidth();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -641,11 +647,9 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
         } else if (e.getSource() == btDelete) {
             delete();
 
-        } else if (e.getSource() == btSearch) {
+        } else if (e.getSource() == btSearch || e.getSource() == tfSearch1 || e.getSource() == tfSearch2) {
             search();
-            tfSearch1.setText("");
-            tfSearch2.setText("");
-            tableListWidth();
+            
         } else if (e.getSource() == btPayment) {
             payment();
         }else if(e.getSource() == btSeller){

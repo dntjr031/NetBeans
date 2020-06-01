@@ -30,7 +30,7 @@ public class PanmaeDAO {
 
             String sql = "INSERT INTO panmae(PANMAE_NO,CUSTOMER_ID,PCODE,PANMAE_QUANTITY,PRICE,SELLER_ID)\n"
                     + "VALUES(PANMAE_SEQ.nextval,?,?,?,?,?)";
-            ps = con.prepareCall(sql);
+            ps = con.prepareStatement(sql);
 
             ps.setString(1, dto.getCustomerId());
             ps.setString(2, dto.getPcode());
@@ -52,7 +52,7 @@ public class PanmaeDAO {
             con = DBUtil.getConnection();
 
             String sql = "select * from panmae ORDER BY panmae_date desc";
-            ps = con.prepareCall(sql);
+            ps = con.prepareStatement(sql);
 
             rs = ps.executeQuery();
             ArrayList<PanmaeDTO> list = new ArrayList<>();
@@ -83,12 +83,41 @@ public class PanmaeDAO {
         return null;
     }
 
-    public ArrayList<PanmaeDTO> searchById(String customerId) throws SQLException {
+    public ArrayList<PanmaeDTO> searchById(String selID) throws SQLException {
+        try {
+            con = DBUtil.getConnection();
+
+            String sql = "select * from panmae where SELLER_ID = ? ORDER BY panmae_date desc";
+            ps = con.prepareStatement(sql);
+            
+            ps.setString(1, selID);
+
+            rs = ps.executeQuery();
+            ArrayList<PanmaeDTO> list = new ArrayList<>();
+            while (rs.next()) {
+                PanmaeDTO dto = new PanmaeDTO();
+                dto.setNo(rs.getInt(1));
+                dto.setCustomerId(rs.getString(2));
+                dto.setPcode(rs.getString(3));
+                dto.setQuantity(rs.getInt(4));
+                dto.setPrice(rs.getInt(5));
+                dto.setSellerId(rs.getString(6));
+                dto.setDate(rs.getTimestamp(7));
+
+                list.add(dto);
+            }
+            return list;
+        } finally {
+            DBUtil.dbclose(rs, ps, con);
+        }
+    }
+
+    public ArrayList<PanmaeDTO> searchByCustomerId(String customerId) throws SQLException {
         try {
             con = DBUtil.getConnection();
 
             String sql = "select * from panmae where CUSTOMER_ID = ? ORDER BY panmae_date desc";
-            ps = con.prepareCall(sql);
+            ps = con.prepareStatement(sql);
             
             ps.setString(1, customerId);
 
@@ -111,5 +140,4 @@ public class PanmaeDAO {
             DBUtil.dbclose(rs, ps, con);
         }
     }
-
 }

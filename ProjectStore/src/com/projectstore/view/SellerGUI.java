@@ -5,8 +5,6 @@
  */
 package com.projectstore.view;
 
-import com.model.customer.CustomerDAO;
-import com.model.customer.CustomerDTO;
 import com.model.panmae.PanmaeDAO;
 import com.model.panmae.PanmaeDTO;
 import com.model.seller.SellerDAO;
@@ -30,7 +28,7 @@ import javax.swing.table.DefaultTableModel;
 public class SellerGUI extends javax.swing.JFrame implements ActionListener {
 
     private StoreMainGUI storeMainGUI;
-    
+
     private String userId;
     private final boolean UPDATE = true, DETAIL = false;
     private SellerDAO daoSel = new SellerDAO();
@@ -58,10 +56,11 @@ public class SellerGUI extends javax.swing.JFrame implements ActionListener {
     SellerGUI(StoreMainGUI aThis) {
         this();
         this.storeMainGUI = aThis;
-        if(!storeMainGUI.selId.equals("admin")){
+        if (!storeMainGUI.selId.equals("admin")) {
             btDelete.setEnabled(false);
             btInsert.setEnabled(false);
         }
+        userId = aThis.selId;
     }
 
     /**
@@ -93,6 +92,7 @@ public class SellerGUI extends javax.swing.JFrame implements ActionListener {
         btSearchAll = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("판매원 관리");
         setResizable(false);
 
         tablesel.setModel(new javax.swing.table.DefaultTableModel(
@@ -303,9 +303,9 @@ public class SellerGUI extends javax.swing.JFrame implements ActionListener {
             public void mouseClicked(MouseEvent e) {
                 if (e.getSource() == tablesel) {
                     int row = tablesel.getSelectedRow();
-                    String customerId = (String) tablesel.getValueAt(row, 0);
+                    String selId = (String) tablesel.getValueAt(row, 0);
                     try {
-                        panmaeSelectById(customerId);
+                        panmaeSelectById(selId);
                     } catch (SQLException ex) {
                         ex.printStackTrace();
                     }
@@ -316,7 +316,7 @@ public class SellerGUI extends javax.swing.JFrame implements ActionListener {
         btSearchAll.addActionListener(this);
         btDelete.addActionListener(this);
         btSearch.addActionListener(this);
-
+        tfSearch.addActionListener(this);
     }
 
     private void init() {
@@ -343,9 +343,15 @@ public class SellerGUI extends javax.swing.JFrame implements ActionListener {
                 return;
             }
             String id = (String) tablesel.getValueAt(row, 0);
-            SellerInsertGUI ci = new SellerInsertGUI(id, UPDATE, this);
-            ci.setVisible(true);
-            storeMainGUI.searchAll();
+
+            if (userId.equals("admin") || id.equals(userId)) {
+                SellerInsertGUI ci = new SellerInsertGUI(id, UPDATE, this);
+                ci.setVisible(true);
+                storeMainGUI.searchAll();
+            }else {
+                JOptionPane.showMessageDialog(this, "admin 계정만 다른 판매원 정보수정이 가능합니다.");
+            }
+
         } else if (e.getSource() == btDetail) {
             int row = tablesel.getSelectedRow();
             if (row == -1) {
@@ -359,7 +365,7 @@ public class SellerGUI extends javax.swing.JFrame implements ActionListener {
             sellerSelectAll();
             panmaeSelectAll();
             textClear();
-        } else if (e.getSource() == btSearch) {
+        } else if (e.getSource() == btSearch || e.getSource()==tfSearch) {
             try {
                 sellerSearchByName();
             } catch (SQLException ex) {
@@ -430,8 +436,8 @@ public class SellerGUI extends javax.swing.JFrame implements ActionListener {
 
     }
 
-    private void panmaeSelectById(String customerId) throws SQLException {
-        listPanmae = daoPanmae.searchById(customerId);
+    private void panmaeSelectById(String selId) throws SQLException {
+        listPanmae = daoPanmae.searchById(selId);
         totalPrice = 0;
 
         if (listPanmae == null || listPanmae.size() == 0 || listPanmae.isEmpty()) {
