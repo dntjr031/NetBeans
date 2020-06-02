@@ -9,6 +9,7 @@ import com.model.panmae.PanmaeDAO;
 import com.model.panmae.PanmaeDTO;
 import com.model.product.ProductDAO;
 import com.model.product.ProductDTO;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -47,8 +48,6 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
         return modelSel;
     }
 
-    
-    
     /**
      * Creates new form StoreMain
      */
@@ -74,11 +73,25 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel2 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        btLogout = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        tfUserId = new javax.swing.JTextField();
+        btSeller = new javax.swing.JButton();
+        btSearch = new javax.swing.JButton();
+        tfSearch2 = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        tfSearch1 = new javax.swing.JTextField();
+        cbSearch = new javax.swing.JComboBox<>();
+        btSearchAll = new javax.swing.JButton();
+        btAccount = new javax.swing.JButton();
+        btCustomer = new javax.swing.JButton();
+        btProduct = new javax.swing.JButton();
         scroll1 = new javax.swing.JScrollPane();
         tableList = new javax.swing.JTable();
         scroll2 = new javax.swing.JScrollPane();
         tablePanmae = new javax.swing.JTable();
+        jLabel2 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         scroll3 = new javax.swing.JScrollPane();
         tableSel = new javax.swing.JTable();
@@ -87,25 +100,56 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
         btPayment = new javax.swing.JButton();
         btDelete = new javax.swing.JButton();
         btCancle = new javax.swing.JButton();
-        btCustomer = new javax.swing.JButton();
-        btProduct = new javax.swing.JButton();
-        btAccount = new javax.swing.JButton();
-        tfUserId = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
-        btSearch = new javax.swing.JButton();
-        btLogout = new javax.swing.JButton();
-        cbSearch = new javax.swing.JComboBox<>();
-        tfSearch1 = new javax.swing.JTextField();
-        tfSearch2 = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
-        btSeller = new javax.swing.JButton();
-        btSearchAll = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("H&B Store Management Program");
+        setBackground(new java.awt.Color(173, 221, 206));
         setResizable(false);
 
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/—Pngtree—vector_shop_icon_3762863-1.png"))); // NOI18N
+        btLogout.setText("로그아웃");
+
+        jLabel3.setText("님 안녕하세요!");
+
+        tfUserId.setEditable(false);
+
+        btSeller.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        btSeller.setForeground(new java.awt.Color(0, 0, 0));
+        btSeller.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/Seller.png"))); // NOI18N
+        btSeller.setText("판매원관리");
+        btSeller.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btSeller.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+
+        btSearch.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        btSearch.setText("검색");
+
+        tfSearch2.setEditable(false);
+
+        jLabel4.setText(" ~ ");
+
+        cbSearch.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "상품코드", "상품명", "가격" }));
+
+        btSearchAll.setText("전체조회");
+
+        btAccount.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        btAccount.setForeground(new java.awt.Color(0, 0, 0));
+        btAccount.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/kisspng-computer-icons-share-icon-accounting-finance-accounting-5b19cbb713f6b0.6060900815284172070818-1.png"))); // NOI18N
+        btAccount.setText("거래처관리");
+        btAccount.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btAccount.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+
+        btCustomer.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        btCustomer.setForeground(new java.awt.Color(0, 0, 0));
+        btCustomer.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/clients_black.png"))); // NOI18N
+        btCustomer.setText("고객관리");
+        btCustomer.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btCustomer.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+
+        btProduct.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        btProduct.setForeground(new java.awt.Color(0, 0, 0));
+        btProduct.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/Product_black.png"))); // NOI18N
+        btProduct.setText("상품관리");
+        btProduct.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btProduct.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
 
         tableList.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -126,6 +170,8 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
             }
         ));
         scroll2.setViewportView(tablePanmae);
+
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/—Pngtree—vector_shop_icon_3762863-1.png"))); // NOI18N
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("결제 목록"));
 
@@ -163,7 +209,7 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(tfTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btPayment, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(btPayment, javax.swing.GroupLayout.DEFAULT_SIZE, 108, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(btDelete)
@@ -185,139 +231,107 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tfTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btPayment))
-                .addContainerGap(8, Short.MAX_VALUE))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
-        btCustomer.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        btCustomer.setForeground(new java.awt.Color(0, 0, 0));
-        btCustomer.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/clients_black.png"))); // NOI18N
-        btCustomer.setText("고객관리");
-        btCustomer.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btCustomer.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-
-        btProduct.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        btProduct.setForeground(new java.awt.Color(0, 0, 0));
-        btProduct.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/Product_black.png"))); // NOI18N
-        btProduct.setText("상품관리");
-        btProduct.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btProduct.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-
-        btAccount.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        btAccount.setForeground(new java.awt.Color(0, 0, 0));
-        btAccount.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/kisspng-computer-icons-share-icon-accounting-finance-accounting-5b19cbb713f6b0.6060900815284172070818-1.png"))); // NOI18N
-        btAccount.setText("거래처관리");
-        btAccount.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btAccount.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-
-        tfUserId.setEditable(false);
-
-        jLabel3.setText("님 안녕하세요!");
-
-        btSearch.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        btSearch.setText("검색");
-
-        btLogout.setText("로그아웃");
-
-        cbSearch.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "상품코드", "상품명", "가격" }));
-
-        tfSearch2.setEditable(false);
-
-        jLabel4.setText(" ~ ");
-
-        btSeller.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        btSeller.setForeground(new java.awt.Color(0, 0, 0));
-        btSeller.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/Seller.png"))); // NOI18N
-        btSeller.setText("판매원관리");
-        btSeller.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btSeller.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-
-        btSearchAll.setText("전체조회");
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                        .addGap(57, 57, 57)
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(scroll2, javax.swing.GroupLayout.PREFERRED_SIZE, 781, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap(12, Short.MAX_VALUE)
+                        .addComponent(scroll1, javax.swing.GroupLayout.PREFERRED_SIZE, 646, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(btSearchAll)
+                                .addGap(121, 121, 121)
+                                .addComponent(cbSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tfSearch1, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tfSearch2, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(23, 23, 23)
+                                .addComponent(btProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(35, 35, 35)
+                                .addComponent(btCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(41, 41, 41)
+                                .addComponent(btAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(48, 48, 48)
+                                .addComponent(btSeller, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(tfUserId, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btLogout)))
+                .addGap(0, 0, 0))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(tfUserId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel3)
+                        .addComponent(btLogout))
+                    .addComponent(btSeller, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btSearch)
+                        .addComponent(cbSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tfSearch1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tfSearch2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel4))
+                    .addComponent(btSearchAll, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(scroll1, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(scroll2, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(42, 42, 42)
+                        .addComponent(jLabel2)))
+                .addGap(10, 10, 10))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(43, 43, 43)
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(scroll2, javax.swing.GroupLayout.PREFERRED_SIZE, 762, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(btSearchAll)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(cbSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tfSearch1, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tfSearch2, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(scroll1, javax.swing.GroupLayout.PREFERRED_SIZE, 621, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addGap(51, 51, 51)
-                        .addComponent(btProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(35, 35, 35)
-                        .addComponent(btCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(41, 41, 41)
-                        .addComponent(btAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btSeller, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(14, 14, 14)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(27, 27, 27)
-                        .addComponent(tfUserId, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btLogout)
-                        .addContainerGap(35, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())))
+                .addGap(0, 0, 0)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(tfUserId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel3)
-                        .addComponent(btLogout))
-                    .addComponent(btAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btSeller, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btSearch)
-                    .addComponent(cbSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tfSearch1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tfSearch2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4)
-                    .addComponent(btSearchAll))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(scroll1, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(scroll2, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(45, 45, 45)
-                        .addComponent(jLabel2)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
@@ -375,6 +389,7 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane scroll1;
     private javax.swing.JScrollPane scroll2;
     private javax.swing.JScrollPane scroll3;
@@ -415,7 +430,7 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
         tableList.addMouseListener(new EventHander());
         btSearchAll.addActionListener(this);
         btSeller.addActionListener(this);
-        
+
         tfSearch1.addActionListener(this);
         tfSearch2.addActionListener(this);
     }
@@ -508,7 +523,7 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
             JOptionPane.showMessageDialog(this, "선택된 상품이 없습니다.");
             return;
         }
-        
+
         PanmaeGUI p = new PanmaeGUI(selId, panmaeList, sum, this);
         p.setVisible(true);
     }
@@ -580,8 +595,8 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
                 int row = tableList.getSelectedRow();
                 String str = (String) tableList.getValueAt(row, 0);
                 String stock = (String) tableList.getValueAt(row, 3);
-                
-                if(stock == null || stock.equals("0") || stock.isEmpty()){
+
+                if (stock == null || stock.equals("0") || stock.isEmpty()) {
                     JOptionPane.showMessageDialog(StoreMainGUI.this, "재고가 없습니다.");
                     return;
                 }
@@ -649,10 +664,10 @@ public class StoreMainGUI extends javax.swing.JFrame implements ActionListener {
 
         } else if (e.getSource() == btSearch || e.getSource() == tfSearch1 || e.getSource() == tfSearch2) {
             search();
-            
+
         } else if (e.getSource() == btPayment) {
             payment();
-        }else if(e.getSource() == btSeller){
+        } else if (e.getSource() == btSeller) {
             SellerGUI s = new SellerGUI(this);
             s.setVisible(true);
         }

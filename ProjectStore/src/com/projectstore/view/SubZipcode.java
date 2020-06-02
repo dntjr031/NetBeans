@@ -83,6 +83,7 @@ public class SubZipcode extends javax.swing.JFrame implements ActionListener {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("우편번호 검색");
+        setBackground(new java.awt.Color(215, 238, 231));
 
         jLabel1.setText("지역명(읍면동):");
 

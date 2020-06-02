@@ -97,4 +97,46 @@ public class ItemDAO {
         }
     }
 
+    public int insert(ItemDTO dto) throws SQLException {
+        try{
+            con = DBUtil.getConnection();
+            
+            String sql = "insert into ITEM values(?,?,?)";
+            ps = con.prepareStatement(sql);
+            
+            ps.setString(1, dto.getCode());
+            ps.setString(2, dto.getName());
+            ps.setString(3, dto.getRemark());
+            
+            int n = ps.executeUpdate();
+            System.out.println("n=" + n + ", dto=" + dto);
+            return n;
+            
+        }finally{
+            DBUtil.dbclose(ps, con);
+        }
+    }
+
+    public int codeCount(String code) throws SQLException {
+        try {
+            con = DBUtil.getConnection();
+
+            String sql = "select count(*) from item where ITEM_CODE=?";
+            ps = con.prepareCall(sql);
+            ps.setString(1, code);
+            
+            rs = ps.executeQuery();
+
+            int count = 0;
+            if (rs.next()) {
+                count = rs.getInt(1);
+
+            }
+            System.out.println("count="+count+", code="+code);
+            return count;
+        } finally {
+            DBUtil.dbclose(rs, ps, con);
+        }
+    }
+
 }
