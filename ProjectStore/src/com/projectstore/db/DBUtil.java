@@ -17,7 +17,7 @@ import java.sql.SQLException;
  */
 public class DBUtil {
 
-    private static String url = "jdbc:oracle:thin:@localhost:1521:xe";
+    private static String url = "jdbc:oracle:thin:@DESKTOP-Q8AMKFB:1521:xe";
 
     private static String user = "STORE", password = "123";
 
